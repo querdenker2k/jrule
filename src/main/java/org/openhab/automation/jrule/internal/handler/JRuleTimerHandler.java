@@ -152,7 +152,7 @@ public class JRuleTimerHandler {
         return JRule.JRULE_EXECUTION_CONTEXT.get();
     }
 
-    private synchronized List<JRuleTimer> getTimers(String timerName) {
+    public synchronized List<JRuleTimer> getTimers(String timerName) {
         List<JRuleTimer> list = timers.stream().filter(timer -> timer.name.equals(timerName))
                 .collect(Collectors.toList());
         logger.trace("timers for name '{}': {}", timerName, list.size());
@@ -272,6 +272,11 @@ public class JRuleTimerHandler {
 
         public JRuleTimerHandler.JRuleTimer rescheduleTimer(Duration delay) {
             return JRuleTimerHandler.this.createOrReplaceTimer(this.name, delay, this.function, context);
+        }
+
+        public JRuleTimerHandler.JRuleTimer invoke() {
+            JRuleTimerHandler.this.invokeTimerInternal(this, this.function);
+            return this;
         }
 
         public boolean isDone() {
