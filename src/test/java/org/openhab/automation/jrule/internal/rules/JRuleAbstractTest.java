@@ -62,20 +62,15 @@ public abstract class JRuleAbstractTest {
         JRuleConfig config = new JRuleConfig(properties);
         config.initConfig();
 
-        JRuleEngine engine = JRuleEngine.get();
-        engine.setConfig(config);
-
         itemRegistry = Mockito.mock(ItemRegistry.class);
-        JRuleEventHandler.get().setItemRegistry(itemRegistry);
-        JRuleEngine.get().setItemRegistry(itemRegistry);
+        eventPublisher = new CollectingEventPublisher();
+        new JRuleEventHandler(eventPublisher, itemRegistry);
+
         JRuleRuleProvider ruleProvider = new JRuleRuleProvider();
         ruleProvider.setEventPublisher(Mockito.mock(EventPublisher.class));
-        JRuleEngine.get().setRuleProvider(ruleProvider);
+        new JRuleEngine(config, itemRegistry, null, ruleProvider, null);
 
         JRuleItemRegistry.setMetadataRegistry(Mockito.mock(MetadataRegistry.class));
-
-        eventPublisher = new CollectingEventPublisher();
-        JRuleEventHandler.get().setEventPublisher(eventPublisher);
 
         eventBus.start();
     }

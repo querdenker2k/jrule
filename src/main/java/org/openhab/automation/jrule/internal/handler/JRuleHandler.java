@@ -50,9 +50,7 @@ import org.openhab.automation.jrule.items.JRuleItemNameClassGenerator;
 import org.openhab.automation.jrule.items.JRuleItemRegistry;
 import org.openhab.automation.jrule.things.JRuleThingClassGenerator;
 import org.openhab.automation.jrule.things.JRuleThingRegistry;
-import org.openhab.core.audio.AudioHTTPServer;
 import org.openhab.core.events.Event;
-import org.openhab.core.events.EventPublisher;
 import org.openhab.core.items.Item;
 import org.openhab.core.items.ItemNotFoundException;
 import org.openhab.core.items.ItemRegistry;
@@ -60,10 +58,7 @@ import org.openhab.core.items.MetadataRegistry;
 import org.openhab.core.items.events.ItemAddedEvent;
 import org.openhab.core.items.events.ItemRemovedEvent;
 import org.openhab.core.items.events.ItemUpdatedEvent;
-import org.openhab.core.net.NetworkAddressService;
-import org.openhab.core.scheduler.CronScheduler;
 import org.openhab.core.thing.Thing;
-import org.openhab.core.thing.ThingManager;
 import org.openhab.core.thing.ThingRegistry;
 import org.openhab.core.thing.ThingUID;
 import org.openhab.core.thing.binding.ThingActions;
@@ -71,8 +66,6 @@ import org.openhab.core.thing.events.ThingAddedEvent;
 import org.openhab.core.thing.events.ThingRemovedEvent;
 import org.openhab.core.thing.events.ThingUpdatedEvent;
 import org.openhab.core.thing.link.ItemChannelLinkRegistry;
-import org.openhab.core.voice.VoiceManager;
-import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,10 +117,7 @@ public class JRuleHandler implements PropertyChangeListener {
     private final JRuleDelayedDebouncingExecutor delayedItemsCompiler;
 
     public JRuleHandler(JRuleConfig config, ItemRegistry itemRegistry, ItemChannelLinkRegistry itemChannelLinkRegistry,
-            ThingRegistry thingRegistry, ThingManager thingManager, EventPublisher eventPublisher,
-            JRuleEventSubscriber eventSubscriber, VoiceManager voiceManager, AudioHTTPServer audioHTTPServer,
-            NetworkAddressService networkAddressService, CronScheduler cronScheduler, BundleContext bundleContext,
-            MetadataRegistry metadataRegistry) {
+            ThingRegistry thingRegistry, JRuleEventSubscriber eventSubscriber, MetadataRegistry metadataRegistry) {
         this.itemRegistry = itemRegistry;
         this.itemChannelLinkRegistry = itemChannelLinkRegistry;
         this.thingRegistry = thingRegistry;
@@ -143,27 +133,7 @@ public class JRuleHandler implements PropertyChangeListener {
         thingGenerator = new JRuleThingClassGenerator(config);
         actionGenerator = new JRuleActionClassGenerator(config);
         compiler = new JRuleCompiler(config);
-
-        final JRuleEventHandler jRuleEventHandler = JRuleEventHandler.get();
-        jRuleEventHandler.setEventPublisher(eventPublisher);
-        jRuleEventHandler.setItemRegistry(itemRegistry);
         eventSubscriber.addPropertyChangeListener(this);
-        final JRuleVoiceHandler jRuleVoiceHandler = JRuleVoiceHandler.get();
-        jRuleVoiceHandler.setVoiceManager(voiceManager);
-        jRuleVoiceHandler.setAudioHTTPServer(audioHTTPServer);
-        jRuleVoiceHandler.setNetworkAddressService(networkAddressService);
-        final JRuleTransformationHandler jRuleTransformationHandler = JRuleTransformationHandler.get();
-        jRuleTransformationHandler.setBundleContext(bundleContext);
-
-        final JRuleThingHandler thingHandler = JRuleThingHandler.get();
-        thingHandler.setThingManager(thingManager);
-        thingHandler.setThingRegistry(thingRegistry);
-        thingHandler.setItemChannelLinkRegistry(itemChannelLinkRegistry);
-
-        final JRuleItemHandler itemHandler = JRuleItemHandler.get();
-        itemHandler.setItemRegistry(itemRegistry);
-        itemHandler.setItemChannelLinkRegistry(itemChannelLinkRegistry);
-        itemHandler.setMetadataRegistry(metadataRegistry);
         logDebug("JRuleHandler()");
     }
 

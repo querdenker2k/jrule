@@ -47,7 +47,7 @@ public class JRuleItemTest {
             return items.stream().filter(item -> item.getKey().getName().equals(itemName)).findFirst()
                     .map(e -> e.getKey()).orElseThrow();
         });
-        JRuleEventHandler.get().setItemRegistry(itemRegistry);
+        new JRuleEventHandler(Mockito.mock(org.openhab.core.events.EventPublisher.class), itemRegistry);
 
         items.forEach((entry) -> {
             JRuleItem item = JRuleItem.forName(entry.getKey().getName());

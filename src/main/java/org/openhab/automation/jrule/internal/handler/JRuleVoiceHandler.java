@@ -16,6 +16,10 @@ import org.openhab.core.audio.AudioHTTPServer;
 import org.openhab.core.library.types.PercentType;
 import org.openhab.core.net.NetworkAddressService;
 import org.openhab.core.voice.VoiceManager;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,36 +29,33 @@ import org.slf4j.LoggerFactory;
  *
  * @author Joseph (Seaside) Hagberg - Initial contribution
  */
+@Component
 public class JRuleVoiceHandler {
 
     private static volatile JRuleVoiceHandler instance;
 
-    private VoiceManager voiceManager;
-    private AudioHTTPServer audioHTTPServer;
-    private NetworkAddressService networkAddressService;
-
-    public VoiceManager getVoiceManager() {
-        return voiceManager;
-    }
+    private final VoiceManager voiceManager;
+    private final AudioHTTPServer audioHTTPServer;
+    private final NetworkAddressService networkAddressService;
 
     private final Logger logger = LoggerFactory.getLogger(JRuleVoiceHandler.class);
 
-    private JRuleVoiceHandler() {
+    @Activate
+    public JRuleVoiceHandler(@Reference VoiceManager voiceManager, @Reference AudioHTTPServer audioHTTPServer,
+            @Reference NetworkAddressService networkAddressService) {
+        this.voiceManager = voiceManager;
+        this.audioHTTPServer = audioHTTPServer;
+        this.networkAddressService = networkAddressService;
+        instance = this;
+    }
+
+    @Deactivate
+    void deactivate() {
+        instance = null;
     }
 
     public static JRuleVoiceHandler get() {
-        if (instance == null) {
-            synchronized (JRuleVoiceHandler.class) {
-                if (instance == null) {
-                    instance = new JRuleVoiceHandler();
-                }
-            }
-        }
         return instance;
-    }
-
-    public void setVoiceManager(VoiceManager voiceManager) {
-        this.voiceManager = voiceManager;
     }
 
     public void say(String text) {
@@ -79,15 +80,7 @@ public class JRuleVoiceHandler {
         return audioHTTPServer;
     }
 
-    public void setAudioHTTPServer(AudioHTTPServer audioHTTPServer) {
-        this.audioHTTPServer = audioHTTPServer;
-    }
-
     public NetworkAddressService getNetworkAddressService() {
         return networkAddressService;
-    }
-
-    public void setNetworkAddressService(NetworkAddressService networkAddressService) {
-        this.networkAddressService = networkAddressService;
     }
 }

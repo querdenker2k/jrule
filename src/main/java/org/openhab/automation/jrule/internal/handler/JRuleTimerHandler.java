@@ -47,16 +47,9 @@ import org.slf4j.MDC;
 public class JRuleTimerHandler {
     private static final Logger logger = LoggerFactory.getLogger(JRuleTimerHandler.class);
     public static final String LOCK_PREFIX = "$LOCK$-";
-    private static volatile JRuleTimerHandler instance = null;
+    private static final JRuleTimerHandler instance = new JRuleTimerHandler();
 
     public static JRuleTimerHandler get() {
-        if (instance == null) {
-            synchronized (JRuleThingHandler.class) {
-                if (instance == null) {
-                    instance = new JRuleTimerHandler();
-                }
-            }
-        }
         return instance;
     }
 

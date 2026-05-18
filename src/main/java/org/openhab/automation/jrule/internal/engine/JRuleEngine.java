@@ -104,18 +104,20 @@ public class JRuleEngine implements PropertyChangeListener {
     private PersistenceServiceRegistry persistenceServiceRegistry;
 
     public static JRuleEngine get() {
-        if (instance == null) {
-            synchronized (JRuleEngine.class) {
-                if (instance == null) {
-                    instance = new JRuleEngine();
-                }
-            }
-        }
         return instance;
     }
 
-    private JRuleEngine() {
+    public JRuleEngine(JRuleConfig config, ItemRegistry itemRegistry, CronScheduler cronScheduler,
+            JRuleRuleProvider ruleProvider, PersistenceServiceRegistry persistenceServiceRegistry) {
+        this.config = config;
+        this.itemRegistry = itemRegistry;
+        if (cronScheduler != null) {
+            this.timerExecutor.setCronScheduler(cronScheduler);
+        }
+        this.ruleProvider = ruleProvider;
+        this.persistenceServiceRegistry = persistenceServiceRegistry;
         this.ruleLoadingStatistics = new JRuleLoadingStatistics(null);
+        instance = this;
     }
 
     public void add(JRule jRule, boolean enableRule) {
@@ -382,10 +384,6 @@ public class JRuleEngine implements PropertyChangeListener {
         return b;
     }
 
-    public void setCronScheduler(CronScheduler cronScheduler) {
-        this.timerExecutor.setCronScheduler(cronScheduler);
-    }
-
     public JRuleLoadingStatistics getRuleLoadingStatistics() {
         return this.ruleLoadingStatistics;
     }
@@ -404,14 +402,6 @@ public class JRuleEngine implements PropertyChangeListener {
 
     protected void logError(String message, Object... parameters) {
         JRuleLog.error(logger, JRuleEngine.class.getSimpleName(), message, parameters);
-    }
-
-    public void setConfig(JRuleConfig config) {
-        this.config = config;
-    }
-
-    public void setItemRegistry(ItemRegistry itemRegistry) {
-        this.itemRegistry = itemRegistry;
     }
 
     public void initialize() {
@@ -490,14 +480,6 @@ public class JRuleEngine implements PropertyChangeListener {
         } else {
             ruleInvoker.accept(context, event);
         }
-    }
-
-    public void setRuleProvider(JRuleRuleProvider ruleProvider) {
-        this.ruleProvider = ruleProvider;
-    }
-
-    public void setPersistenceServiceRegistry(PersistenceServiceRegistry persistenceServiceRegistry) {
-        this.persistenceServiceRegistry = persistenceServiceRegistry;
     }
 
     public PersistenceServiceRegistry getPersistenceServiceRegistry() {

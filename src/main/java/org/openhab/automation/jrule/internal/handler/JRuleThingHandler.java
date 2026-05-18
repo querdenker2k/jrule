@@ -23,45 +23,40 @@ import org.openhab.automation.jrule.things.JRuleChannel;
 import org.openhab.automation.jrule.things.JRuleThingStatus;
 import org.openhab.core.thing.*;
 import org.openhab.core.thing.link.ItemChannelLinkRegistry;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * The {@link JRuleThingHandler} provides access to thing actions
  *
  * @author Arne Seime - Initial contribution
  */
+@Component
 public class JRuleThingHandler {
 
-    private static volatile JRuleThingHandler instance = null;
+    private static volatile JRuleThingHandler instance;
 
-    private JRuleThingHandler() {
-    }
+    private final ThingRegistry thingRegistry;
+    private final ThingManager thingManager;
+    private final ItemChannelLinkRegistry itemChannelLinkRegistry;
 
-    private ThingRegistry thingRegistry;
-
-    private ThingManager thingManager;
-
-    private ItemChannelLinkRegistry itemChannelLinkRegistry;
-
-    public void setThingManager(ThingManager thingManager) {
-        this.thingManager = thingManager;
-    }
-
-    public void setThingRegistry(ThingRegistry thingRegistry) {
+    @Activate
+    public JRuleThingHandler(@Reference ThingRegistry thingRegistry, @Reference ThingManager thingManager,
+            @Reference ItemChannelLinkRegistry itemChannelLinkRegistry) {
         this.thingRegistry = thingRegistry;
+        this.thingManager = thingManager;
+        this.itemChannelLinkRegistry = itemChannelLinkRegistry;
+        instance = this;
     }
 
-    public void setItemChannelLinkRegistry(ItemChannelLinkRegistry itemChannelLinkRegistry) {
-        this.itemChannelLinkRegistry = itemChannelLinkRegistry;
+    @Deactivate
+    void deactivate() {
+        instance = null;
     }
 
     public static JRuleThingHandler get() {
-        if (instance == null) {
-            synchronized (JRuleThingHandler.class) {
-                if (instance == null) {
-                    instance = new JRuleThingHandler();
-                }
-            }
-        }
         return instance;
     }
 

@@ -16,7 +16,6 @@ import java.lang.StackWalker.StackFrame;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.eclipse.jdt.annotation.NonNull;
 import org.openhab.automation.jrule.exception.JRuleItemNotFoundException;
 import org.openhab.automation.jrule.exception.JRuleRuntimeException;
 import org.openhab.automation.jrule.internal.JRuleLog;
@@ -35,6 +34,10 @@ import org.openhab.core.types.Command;
 import org.openhab.core.types.State;
 import org.openhab.core.types.Type;
 import org.openhab.core.types.UnDefType;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +47,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Joseph (Seaside) Hagberg - Initial contribution
  */
+@Component
 public class JRuleEventHandler {
     private static final Map<Class<? extends JRuleValue>, Class<? extends State>> stateMapping = new HashMap<>();
     private static final Map<Class<? extends JRuleValue>, Class<? extends Command>> commandMapping = new HashMap<>();
@@ -88,28 +92,25 @@ public class JRuleEventHandler {
 
     private static volatile JRuleEventHandler instance;
 
-    private EventPublisher eventPublisher;
-
-    private ItemRegistry itemRegistry;
+    private final EventPublisher eventPublisher;
+    private final ItemRegistry itemRegistry;
 
     private final Logger logger = LoggerFactory.getLogger(JRuleEventHandler.class);
 
-    private JRuleEventHandler() {
+    @Activate
+    public JRuleEventHandler(@Reference EventPublisher eventPublisher, @Reference ItemRegistry itemRegistry) {
+        this.eventPublisher = eventPublisher;
+        this.itemRegistry = itemRegistry;
+        instance = this;
+    }
+
+    @Deactivate
+    void deactivate() {
+        instance = null;
     }
 
     public static JRuleEventHandler get() {
-        if (instance == null) {
-            synchronized (JRuleEventHandler.class) {
-                if (instance == null) {
-                    instance = new JRuleEventHandler();
-                }
-            }
-        }
         return instance;
-    }
-
-    public void setEventPublisher(EventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
     }
 
     public void sendCommand(String itemName, JRuleValue command) {
@@ -144,9 +145,6 @@ public class JRuleEventHandler {
     }
 
     public void sendCommand(String itemName, Command command) {
-        if (eventPublisher == null) {
-            return;
-        }
         logInfo("SendCommand '{}' to '{}'", command, itemName);
         try {
             if (!itemRegistry.getItem(itemName).getAcceptedCommandTypes().contains(command.getClass())) {
@@ -187,9 +185,6 @@ public class JRuleEventHandler {
     }
 
     private void postUpdate(String itemName, State state) {
-        if (eventPublisher == null) {
-            return;
-        }
         logInfo("PostUpdate '{}' to '{}'", state, itemName);
         try {
             if (!itemRegistry.getItem(itemName).getAcceptedDataTypes().contains(state.getClass())) {
@@ -210,9 +205,6 @@ public class JRuleEventHandler {
     }
 
     public State getStateFromItem(String itemName) {
-        if (itemRegistry == null) {
-            return null;
-        }
         try {
             Item item = itemRegistry.getItem(itemName);
             return item.getState();
@@ -226,9 +218,6 @@ public class JRuleEventHandler {
     }
 
     public void setValue(String itemName, State itemState) {
-        if (itemRegistry == null) {
-            throw new JRuleRuntimeException("ItemRegistry must not be null");
-        }
         try {
             Item item = itemRegistry.getItem(itemName);
             if (!(item instanceof GenericItem)) {
@@ -238,10 +227,6 @@ public class JRuleEventHandler {
         } catch (ItemNotFoundException e) {
             throw new JRuleRuntimeException(String.format("Failed to find item: %s", itemName));
         }
-    }
-
-    public void setItemRegistry(@NonNull ItemRegistry itemRegistry) {
-        this.itemRegistry = itemRegistry;
     }
 
     public Set<String> getGroupMemberNames(String groupName, boolean recursive) {

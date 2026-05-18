@@ -16,6 +16,10 @@ import org.openhab.automation.jrule.exception.JRuleRuntimeException;
 import org.openhab.core.transform.TransformationException;
 import org.openhab.core.transform.TransformationHelper;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,34 +28,28 @@ import org.slf4j.LoggerFactory;
  *
  * @author Arne Seime - Initial contribution
  */
+@Component
 public class JRuleTransformationHandler {
 
     private static volatile JRuleTransformationHandler instance;
 
-    private BundleContext bundleContext;
+    private final BundleContext bundleContext;
 
     private final Logger logger = LoggerFactory.getLogger(JRuleTransformationHandler.class);
 
-    private JRuleTransformationHandler() {
+    @Activate
+    public JRuleTransformationHandler(ComponentContext componentContext) {
+        this.bundleContext = componentContext.getBundleContext();
+        instance = this;
+    }
+
+    @Deactivate
+    void deactivate() {
+        instance = null;
     }
 
     public static JRuleTransformationHandler get() {
-        if (instance == null) {
-            synchronized (JRuleTransformationHandler.class) {
-                if (instance == null) {
-                    instance = new JRuleTransformationHandler();
-                }
-            }
-        }
         return instance;
-    }
-
-    public void setBundleContext(BundleContext bundleContext) {
-        this.bundleContext = bundleContext;
-    }
-
-    public BundleContext getBundleContext() {
-        return bundleContext;
     }
 
     /**

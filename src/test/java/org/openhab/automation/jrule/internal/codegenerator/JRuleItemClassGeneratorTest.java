@@ -107,7 +107,7 @@ public class JRuleItemClassGeneratorTest {
             Object itemName = invocationOnMock.getArgument(0);
             return items.stream().filter(item -> item.getName().equals(itemName)).findFirst().orElseThrow();
         });
-        JRuleEventHandler.get().setItemRegistry(itemRegistry);
+        new JRuleEventHandler(Mockito.mock(org.openhab.core.events.EventPublisher.class), itemRegistry);
 
         File compiledClass = new File(targetFolder, "JRuleItems.class");
         assertTrue(compiledClass.exists());

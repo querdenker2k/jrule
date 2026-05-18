@@ -20,12 +20,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.openhab.automation.jrule.internal.JRuleConfig;
 import org.openhab.automation.jrule.internal.engine.JRuleBuilder.Condition;
 import org.openhab.automation.jrule.internal.engine.excutioncontext.JRuleChannelExecutionContext;
 import org.openhab.automation.jrule.internal.engine.excutioncontext.JRuleItemChangeExecutionContext;
@@ -61,11 +64,13 @@ public class JRuleBuilderTest extends JRuleAbstractTest {
 
     @BeforeEach
     public void setup() {
-        jRuleEngine = Mockito.spy(JRuleEngine.class);
         ruleProvider = Mockito.mock(JRuleRuleProvider.class);
         cronScheduler = Mockito.mock(CronScheduler.class);
-        jRuleEngine.setRuleProvider(ruleProvider);
-        jRuleEngine.setCronScheduler(cronScheduler);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("org.openhab.automation.jrule.engine.executors.enable", "false");
+        JRuleConfig config = new JRuleConfig(properties);
+        config.initConfig();
+        jRuleEngine = Mockito.spy(new JRuleEngine(config, null, cronScheduler, ruleProvider, null));
 
         jRuleBuilder = new JRuleBuilder(jRuleEngine, "ruleName", invocationCallback);
     }

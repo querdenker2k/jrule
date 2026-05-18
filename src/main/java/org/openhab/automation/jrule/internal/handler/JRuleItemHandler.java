@@ -33,44 +33,40 @@ import org.openhab.core.library.types.StringType;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.link.ItemChannelLink;
 import org.openhab.core.thing.link.ItemChannelLinkRegistry;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * The {@link JRuleItemHandler} provides access to item Registry
  *
  * @author Joseph (Seaside) Hagberg - Initial contribution
  */
+@Component
 public class JRuleItemHandler {
 
-    private static volatile JRuleItemHandler instance = null;
+    private static volatile JRuleItemHandler instance;
 
-    private JRuleItemHandler() {
-    }
+    private final ItemRegistry itemRegistry;
+    private final ItemChannelLinkRegistry itemChannelLinkRegistry;
+    private final MetadataRegistry metadataRegistry;
 
-    private ItemRegistry itemRegistry;
-    private ItemChannelLinkRegistry itemChannelLinkRegistry;
-
-    private MetadataRegistry metadataRegistry;
-
-    public void setMetadataRegistry(MetadataRegistry metadataRegistry) {
-        this.metadataRegistry = metadataRegistry;
-    }
-
-    public void setItemRegistry(ItemRegistry itemRegistry) {
+    @Activate
+    public JRuleItemHandler(@Reference ItemRegistry itemRegistry,
+            @Reference ItemChannelLinkRegistry itemChannelLinkRegistry, @Reference MetadataRegistry metadataRegistry) {
         this.itemRegistry = itemRegistry;
+        this.itemChannelLinkRegistry = itemChannelLinkRegistry;
+        this.metadataRegistry = metadataRegistry;
+        instance = this;
     }
 
-    public void setItemChannelLinkRegistry(ItemChannelLinkRegistry itemChannelLinkRegistry) {
-        this.itemChannelLinkRegistry = itemChannelLinkRegistry;
+    @Deactivate
+    void deactivate() {
+        instance = null;
     }
 
     public static JRuleItemHandler get() {
-        if (instance == null) {
-            synchronized (JRuleItemHandler.class) {
-                if (instance == null) {
-                    instance = new JRuleItemHandler();
-                }
-            }
-        }
         return instance;
     }
 
