@@ -41,12 +41,12 @@ public interface JRuleImageGroupItem extends JRuleImageItem, JRuleGroupItem<JRul
     }
 
     default Set<JRuleImageItem> memberItems(boolean recursive) {
-        return JRuleEventHandler.get().getGroupMemberItems(getName(), recursive).stream()
+        return JRuleEventHandler.getGroupMemberItems(getName(), recursive).stream()
                 .map(jRuleItem -> (JRuleImageItem) jRuleItem).collect(Collectors.toSet());
     }
 
     default void postUpdate(JRuleRawValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
+        JRuleEventHandler.postUpdate(getName(), state);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
     }
 }

@@ -44,6 +44,6 @@ public interface JRuleCallItem extends JRuleItem {
     }
 
     default JRuleStringListValue getStateAsStringList() {
-        return JRuleEventHandler.get().getValue(getName(), JRuleStringListValue.class);
+        return JRuleEventHandler.getValue(getName(), JRuleStringListValue.class);
     }
 }

@@ -80,7 +80,7 @@ public abstract class JRuleItemTestBase {
         Mockito.when(itemRegistry.getItem(GROUP_NAME)).thenReturn(ohGroupItem);
         Mockito.when(itemRegistry.getItem(GROUP_NAME_2)).thenReturn(ohSubGroupItem);
         Mockito.when(itemRegistry.getItem(ITEM_NON_EXISTING)).thenThrow(JRuleItemNotFoundException.class);
-        JRuleEventHandler.get().setItemRegistry(itemRegistry);
+        JRuleEventHandler.setItemRegistry(itemRegistry);
 
         eventPublisher = Mockito.mock(EventPublisher.class);
         Mockito.doAnswer(invocationOnMock -> {
@@ -100,7 +100,7 @@ public abstract class JRuleItemTestBase {
             }
             return null;
         }).when(eventPublisher).post(Mockito.any());
-        JRuleEventHandler.get().setEventPublisher(eventPublisher);
+        JRuleEventHandler.setEventPublisher(eventPublisher);
 
         MetadataRegistry metadataRegistry = Mockito.mock(MetadataRegistry.class);
         JRuleItemRegistry.setMetadataRegistry(metadataRegistry);

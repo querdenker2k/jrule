@@ -93,6 +93,6 @@ public interface JRuleDimmerItem extends JRuleSwitchItem {
     }
 
     default JRulePercentValue getStateAsPercent() {
-        return JRuleEventHandler.get().getValue(getName(), JRulePercentValue.class);
+        return JRuleEventHandler.getValue(getName(), JRulePercentValue.class);
     }
 }

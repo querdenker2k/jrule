@@ -41,41 +41,41 @@ public interface JRuleNumberGroupItem extends JRuleNumberItem, JRuleGroupItem<JR
     }
 
     default Set<JRuleNumberItem> memberItems(boolean recursive) {
-        return JRuleEventHandler.get().getGroupMemberItems(getName(), recursive).stream()
+        return JRuleEventHandler.getGroupMemberItems(getName(), recursive).stream()
                 .map(jRuleItem -> (JRuleNumberItem) jRuleItem).collect(Collectors.toSet());
     }
 
     default void sendCommand(JRuleDecimalValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 
     default void postUpdate(JRuleDecimalValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
+        JRuleEventHandler.postUpdate(getName(), state);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
     }
 
     default void sendCommand(double command) {
-        JRuleEventHandler.get().sendCommand(getName(), new JRuleDecimalValue(command));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.sendCommand(getName(), new JRuleDecimalValue(command));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.sendUncheckedCommand(new JRuleDecimalValue(command)));
     }
 
     default void sendCommand(int command) {
-        JRuleEventHandler.get().sendCommand(getName(), new JRuleDecimalValue(command));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.sendCommand(getName(), new JRuleDecimalValue(command));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.sendUncheckedCommand(new JRuleDecimalValue(command)));
     }
 
     default void postUpdate(double state) {
-        JRuleEventHandler.get().postUpdate(getName(), new JRuleDecimalValue(state));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.postUpdate(getName(), new JRuleDecimalValue(state));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.postUncheckedUpdate(new JRuleDecimalValue(state)));
     }
 
     default void postUpdate(int state) {
-        JRuleEventHandler.get().postUpdate(getName(), new JRuleDecimalValue(state));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.postUpdate(getName(), new JRuleDecimalValue(state));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.postUncheckedUpdate(new JRuleDecimalValue(state)));
     }
 }

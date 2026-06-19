@@ -87,10 +87,10 @@ public interface JRulePlayerItem extends JRuleItem {
     }
 
     default JRulePlayPauseValue getStateAsPlayPause() {
-        return JRuleEventHandler.get().getValue(getName(), JRulePlayPauseValue.class);
+        return JRuleEventHandler.getValue(getName(), JRulePlayPauseValue.class);
     }
 
     default JRuleRewindFastforwardValue getStateAsRewindFastforward() {
-        return JRuleEventHandler.get().getValue(getName(), JRuleRewindFastforwardValue.class);
+        return JRuleEventHandler.getValue(getName(), JRuleRewindFastforwardValue.class);
     }
 }

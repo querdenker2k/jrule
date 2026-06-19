@@ -44,6 +44,6 @@ public interface JRuleImageItem extends JRuleItem {
     }
 
     default JRuleRawValue getStateAsRaw() {
-        return JRuleEventHandler.get().getValue(getName(), JRuleRawValue.class);
+        return JRuleEventHandler.getValue(getName(), JRuleRawValue.class);
     }
 }

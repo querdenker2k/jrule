@@ -27,60 +27,54 @@ import org.slf4j.LoggerFactory;
  */
 public class JRuleVoiceHandler {
 
-    private static final JRuleVoiceHandler INSTANCE = new JRuleVoiceHandler();
+    private static VoiceManager voiceManager;
+    private static AudioHTTPServer audioHTTPServer;
+    private static NetworkAddressService networkAddressService;
 
-    private VoiceManager voiceManager;
-    private AudioHTTPServer audioHTTPServer;
-    private NetworkAddressService networkAddressService;
+    private static final Logger logger = LoggerFactory.getLogger(JRuleVoiceHandler.class);
 
-    public VoiceManager getVoiceManager() {
+    private JRuleVoiceHandler() {
+    }
+
+    public static VoiceManager getVoiceManager() {
         return voiceManager;
     }
 
-    private final Logger logger = LoggerFactory.getLogger(JRuleVoiceHandler.class);
-
-    JRuleVoiceHandler() {
+    public static void setVoiceManager(VoiceManager voiceManager) {
+        JRuleVoiceHandler.voiceManager = voiceManager;
     }
 
-    public static JRuleVoiceHandler get() {
-        return INSTANCE;
-    }
-
-    public void setVoiceManager(VoiceManager voiceManager) {
-        this.voiceManager = voiceManager;
-    }
-
-    public void say(String text) {
+    public static void say(String text) {
         voiceManager.say(text);
     }
 
-    public void say(String text, int volumePercent) {
+    public static void say(String text, int volumePercent) {
         final PercentType volume = new PercentType(volumePercent);
         voiceManager.say(text, volume);
     }
 
-    public void say(String text, String voiceId, String sinkId) {
+    public static void say(String text, String voiceId, String sinkId) {
         voiceManager.say(text, voiceId, sinkId);
     }
 
-    public void say(String text, String voiceId, String sinkId, int volumePercent) {
+    public static void say(String text, String voiceId, String sinkId, int volumePercent) {
         final PercentType volume = new PercentType(volumePercent);
         voiceManager.say(text, voiceId, sinkId, volume);
     }
 
-    public AudioHTTPServer getAudioHTTPServer() {
+    public static AudioHTTPServer getAudioHTTPServer() {
         return audioHTTPServer;
     }
 
-    public void setAudioHTTPServer(AudioHTTPServer audioHTTPServer) {
-        this.audioHTTPServer = audioHTTPServer;
+    public static void setAudioHTTPServer(AudioHTTPServer audioHTTPServer) {
+        JRuleVoiceHandler.audioHTTPServer = audioHTTPServer;
     }
 
-    public NetworkAddressService getNetworkAddressService() {
+    public static NetworkAddressService getNetworkAddressService() {
         return networkAddressService;
     }
 
-    public void setNetworkAddressService(NetworkAddressService networkAddressService) {
-        this.networkAddressService = networkAddressService;
+    public static void setNetworkAddressService(NetworkAddressService networkAddressService) {
+        JRuleVoiceHandler.networkAddressService = networkAddressService;
     }
 }

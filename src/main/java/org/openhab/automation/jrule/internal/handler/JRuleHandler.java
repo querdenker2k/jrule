@@ -144,26 +144,21 @@ public class JRuleHandler implements PropertyChangeListener {
         actionGenerator = new JRuleActionClassGenerator(config);
         compiler = new JRuleCompiler(config);
 
-        final JRuleEventHandler jRuleEventHandler = JRuleEventHandler.get();
-        jRuleEventHandler.setEventPublisher(eventPublisher);
-        jRuleEventHandler.setItemRegistry(itemRegistry);
+        JRuleEventHandler.setEventPublisher(eventPublisher);
+        JRuleEventHandler.setItemRegistry(itemRegistry);
         eventSubscriber.addPropertyChangeListener(this);
-        final JRuleVoiceHandler jRuleVoiceHandler = JRuleVoiceHandler.get();
-        jRuleVoiceHandler.setVoiceManager(voiceManager);
-        jRuleVoiceHandler.setAudioHTTPServer(audioHTTPServer);
-        jRuleVoiceHandler.setNetworkAddressService(networkAddressService);
-        final JRuleTransformationHandler jRuleTransformationHandler = JRuleTransformationHandler.get();
-        jRuleTransformationHandler.setBundleContext(bundleContext);
+        JRuleVoiceHandler.setVoiceManager(voiceManager);
+        JRuleVoiceHandler.setAudioHTTPServer(audioHTTPServer);
+        JRuleVoiceHandler.setNetworkAddressService(networkAddressService);
+        JRuleTransformationHandler.setBundleContext(bundleContext);
 
-        final JRuleThingHandler thingHandler = JRuleThingHandler.get();
-        thingHandler.setThingManager(thingManager);
-        thingHandler.setThingRegistry(thingRegistry);
-        thingHandler.setItemChannelLinkRegistry(itemChannelLinkRegistry);
+        JRuleThingHandler.get().setThingManager(thingManager);
+        JRuleThingHandler.get().setThingRegistry(thingRegistry);
+        JRuleThingHandler.get().setItemChannelLinkRegistry(itemChannelLinkRegistry);
 
-        final JRuleItemHandler itemHandler = JRuleItemHandler.get();
-        itemHandler.setItemRegistry(itemRegistry);
-        itemHandler.setItemChannelLinkRegistry(itemChannelLinkRegistry);
-        itemHandler.setMetadataRegistry(metadataRegistry);
+        JRuleItemHandler.get().setItemRegistry(itemRegistry);
+        JRuleItemHandler.get().setItemChannelLinkRegistry(itemChannelLinkRegistry);
+        JRuleItemHandler.get().setMetadataRegistry(metadataRegistry);
         logDebug("JRuleHandler()");
     }
 

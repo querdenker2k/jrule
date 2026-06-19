@@ -41,29 +41,29 @@ public interface JRuleSwitchGroupItem extends JRuleSwitchItem, JRuleGroupItem<JR
     }
 
     default Set<? extends JRuleSwitchItem> memberItems(boolean recursive) {
-        return JRuleEventHandler.get().getGroupMemberItems(getName(), recursive).stream()
+        return JRuleEventHandler.getGroupMemberItems(getName(), recursive).stream()
                 .map(jRuleItem -> (JRuleSwitchItem) jRuleItem).collect(Collectors.toSet());
     }
 
     default void sendCommand(JRuleOnOffValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 
     default void postUpdate(JRuleOnOffValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
+        JRuleEventHandler.postUpdate(getName(), state);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
     }
 
     default void sendCommand(boolean command) {
-        JRuleEventHandler.get().sendCommand(getName(), JRuleOnOffValue.valueOf(command));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.sendCommand(getName(), JRuleOnOffValue.valueOf(command));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.sendUncheckedCommand(JRuleOnOffValue.valueOf(command)));
     }
 
     default void postUpdate(boolean state) {
-        JRuleEventHandler.get().postUpdate(getName(), JRuleOnOffValue.valueOf(state));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.postUpdate(getName(), JRuleOnOffValue.valueOf(state));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.postUncheckedUpdate(JRuleOnOffValue.valueOf(state)));
     }
 }

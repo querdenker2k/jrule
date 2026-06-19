@@ -63,7 +63,7 @@ public abstract class JRuleInternalItem implements JRuleItem {
 
     @Override
     public String getStateAsString() {
-        JRuleStringValue value = JRuleEventHandler.get().getValue(name, JRuleStringValue.class);
+        JRuleStringValue value = JRuleEventHandler.getValue(name, JRuleStringValue.class);
         if (value == null) {
             return null;
         }
@@ -138,7 +138,7 @@ public abstract class JRuleInternalItem implements JRuleItem {
 
     private static Item getItem(String itemName) {
         try {
-            ItemRegistry itemRegistry = JRuleEventHandler.get().getItemRegistry();
+            ItemRegistry itemRegistry = JRuleEventHandler.getItemRegistry();
             if (itemRegistry == null) {
                 throw new IllegalStateException(
                         String.format("Item registry is not set can't get item for name: %s", itemName));

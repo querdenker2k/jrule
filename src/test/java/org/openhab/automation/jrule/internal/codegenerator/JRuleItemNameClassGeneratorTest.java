@@ -171,7 +171,7 @@ public class JRuleItemNameClassGeneratorTest {
         // Object itemName = invocationOnMock.getArgument(0);
         // return items.stream().filter(item -> item.getName().equals(itemName)).findFirst().orElseThrow();
         // });
-        // JRuleEventHandler.get().setItemRegistry(itemRegistry);
+        // JRuleEventHandler.setItemRegistry(itemRegistry);
         //
         // File compiledClass = new File(targetFolder, "JRuleItems.class");
         // assertTrue(compiledClass.exists());

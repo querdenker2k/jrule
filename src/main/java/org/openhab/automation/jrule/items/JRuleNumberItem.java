@@ -89,6 +89,6 @@ public interface JRuleNumberItem extends JRuleItem {
     }
 
     default JRuleDecimalValue getStateAsDecimal() {
-        return JRuleEventHandler.get().getValue(getName(), JRuleDecimalValue.class);
+        return JRuleEventHandler.getValue(getName(), JRuleDecimalValue.class);
     }
 }

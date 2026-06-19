@@ -16,7 +16,6 @@ import java.lang.StackWalker.StackFrame;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.eclipse.jdt.annotation.NonNull;
 import org.openhab.automation.jrule.exception.JRuleItemNotFoundException;
 import org.openhab.automation.jrule.exception.JRuleRuntimeException;
 import org.openhab.automation.jrule.internal.JRuleLog;
@@ -85,39 +84,33 @@ public class JRuleEventHandler {
     }
 
     private static final String LOG_NAME_EVENT = "JRuleEvent";
+    private static final Logger logger = LoggerFactory.getLogger(JRuleEventHandler.class);
 
-    private static final JRuleEventHandler INSTANCE = new JRuleEventHandler();
+    private static EventPublisher eventPublisher;
+    private static ItemRegistry itemRegistry;
 
-    private EventPublisher eventPublisher;
-
-    private ItemRegistry itemRegistry;
-
-    private final Logger logger = LoggerFactory.getLogger(JRuleEventHandler.class);
-
-    JRuleEventHandler() {
+    private JRuleEventHandler() {
     }
 
-    public static JRuleEventHandler get() {
-        return INSTANCE;
+    public static void setEventPublisher(EventPublisher eventPublisher) {
+        JRuleEventHandler.eventPublisher = eventPublisher;
     }
 
-    public void setEventPublisher(EventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
+    public static void setItemRegistry(ItemRegistry itemRegistry) {
+        JRuleEventHandler.itemRegistry = itemRegistry;
     }
 
-    public void sendCommand(String itemName, JRuleValue command) {
+    public static void sendCommand(String itemName, JRuleValue command) {
         sendCommand(itemName, command.toOhCommand());
     }
 
-    public void sendCommand(String itemName, double value, String unit) {
+    public static void sendCommand(String itemName, double value, String unit) {
         final QuantityType<?> type = new QuantityType<>(value + " " + unit);
         sendCommand(itemName, type);
     }
 
-    private String getSourceRule(String itemName, Type commandOrState) {
-        // Find calling class that extends "JRule" and use this class as source for command/update
+    private static String getSourceRule(String itemName, Type commandOrState) {
         String source = null;
-
         try {
             java.util.Optional<StackFrame> ruleFrameOpt = StackWalker
                     .getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(frames -> frames.filter(f -> {
@@ -136,7 +129,7 @@ public class JRuleEventHandler {
         return source;
     }
 
-    public void sendCommand(String itemName, Command command) {
+    public static void sendCommand(String itemName, Command command) {
         if (eventPublisher == null) {
             return;
         }
@@ -158,7 +151,7 @@ public class JRuleEventHandler {
         eventPublisher.post(ItemEventFactory.createCommandEvent(itemName, command, source));
     }
 
-    public void postUpdate(String itemName, JRuleValue value) {
+    public static void postUpdate(String itemName, JRuleValue value) {
         if (value == null) {
             postUpdate(itemName, UnDefType.NULL);
         } else {
@@ -166,20 +159,20 @@ public class JRuleEventHandler {
         }
     }
 
-    public void postUndef(String itemName) {
+    public static void postUndef(String itemName) {
         postUpdate(itemName, UnDefType.UNDEF);
     }
 
-    public void postNull(String itemName) {
+    public static void postNull(String itemName) {
         postUpdate(itemName, UnDefType.NULL);
     }
 
-    public void postUpdate(String itemName, double value, String unit) {
+    public static void postUpdate(String itemName, double value, String unit) {
         QuantityType<?> type = new QuantityType<>(value + " " + unit);
         postUpdate(itemName, type);
     }
 
-    private void postUpdate(String itemName, State state) {
+    private static void postUpdate(String itemName, State state) {
         if (eventPublisher == null) {
             return;
         }
@@ -202,7 +195,7 @@ public class JRuleEventHandler {
         eventPublisher.post(itemEvent);
     }
 
-    public State getStateFromItem(String itemName) {
+    public static State getStateFromItem(String itemName) {
         if (itemRegistry == null) {
             return null;
         }
@@ -218,7 +211,7 @@ public class JRuleEventHandler {
         }
     }
 
-    public void setValue(String itemName, State itemState) {
+    public static void setValue(String itemName, State itemState) {
         if (itemRegistry == null) {
             throw new JRuleRuntimeException("ItemRegistry must not be null");
         }
@@ -233,15 +226,11 @@ public class JRuleEventHandler {
         }
     }
 
-    public void setItemRegistry(@NonNull ItemRegistry itemRegistry) {
-        this.itemRegistry = itemRegistry;
-    }
-
-    public Set<String> getGroupMemberNames(String groupName, boolean recursive) {
+    public static Set<String> getGroupMemberNames(String groupName, boolean recursive) {
         return getGroupMemberItems(groupName, recursive).stream().map(JRuleItem::getName).collect(Collectors.toSet());
     }
 
-    public Set<JRuleItem> getGroupMemberItems(String groupName, boolean recursive) {
+    public static Set<JRuleItem> getGroupMemberItems(String groupName, boolean recursive) {
         try {
             Item item = itemRegistry.getItem(groupName);
             if (item instanceof GroupItem) {
@@ -267,7 +256,7 @@ public class JRuleEventHandler {
         }
     }
 
-    public List<JRuleGroupItem<? extends JRuleItem>> getGroupItems(String itemName, boolean recursive) {
+    public static List<JRuleGroupItem<? extends JRuleItem>> getGroupItems(String itemName, boolean recursive) {
         try {
             Item item = itemRegistry.getItem(itemName);
             List<JRuleGroupItem<? extends JRuleItem>> list = item.getGroupNames().stream().map(JRuleItemRegistry::get)
@@ -284,28 +273,23 @@ public class JRuleEventHandler {
         }
     }
 
-    public ItemRegistry getItemRegistry() {
+    public static ItemRegistry getItemRegistry() {
         return itemRegistry;
     }
 
-    private void logDebug(String message, Object... parameters) {
+    private static void logDebug(String message, Object... parameters) {
         JRuleLog.debug(logger, getLogName(LOG_NAME_EVENT), message, parameters);
     }
 
-    private void logInfo(String message, Object... parameters) {
+    private static void logInfo(String message, Object... parameters) {
         JRuleLog.info(logger, getLogName(LOG_NAME_EVENT), message, parameters);
     }
 
-    @SuppressWarnings("unused")
-    private void logWarn(String message, Object... parameters) {
-        JRuleLog.warn(logger, getLogName(LOG_NAME_EVENT), message, parameters);
-    }
-
-    private void logError(String message, Object... parameters) {
+    private static void logError(String message, Object... parameters) {
         JRuleLog.error(logger, getLogName(LOG_NAME_EVENT), message, parameters);
     }
 
-    private String getLogName(String defaultValue) {
+    private static String getLogName(String defaultValue) {
         JRuleExecutionContext context = JRule.JRULE_EXECUTION_CONTEXT.get();
         if (context != null) {
             return context.getLogName();
@@ -314,7 +298,7 @@ public class JRuleEventHandler {
         }
     }
 
-    public <V extends JRuleValue> V getValue(String name, Class<V> valueClass) {
+    public static <V extends JRuleValue> V getValue(String name, Class<V> valueClass) {
         State state = getStateFromItem(name);
         if (state.getClass().equals(UnDefType.class)) {
             return null;
@@ -352,7 +336,7 @@ public class JRuleEventHandler {
         return toValue(itemState.toFullString(), valueClass);
     }
 
-    public JRuleValue getValue(String name) {
+    public static JRuleValue getValue(String name) {
         return toValue(getStateFromItem(name));
     }
 

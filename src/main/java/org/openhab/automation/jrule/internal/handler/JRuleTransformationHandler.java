@@ -26,24 +26,18 @@ import org.slf4j.LoggerFactory;
  */
 public class JRuleTransformationHandler {
 
-    private static final JRuleTransformationHandler INSTANCE = new JRuleTransformationHandler();
+    private static BundleContext bundleContext;
 
-    private BundleContext bundleContext;
+    private static final Logger logger = LoggerFactory.getLogger(JRuleTransformationHandler.class);
 
-    private final Logger logger = LoggerFactory.getLogger(JRuleTransformationHandler.class);
-
-    JRuleTransformationHandler() {
+    private JRuleTransformationHandler() {
     }
 
-    public static JRuleTransformationHandler get() {
-        return INSTANCE;
+    public static void setBundleContext(BundleContext bundleContext) {
+        JRuleTransformationHandler.bundleContext = bundleContext;
     }
 
-    public void setBundleContext(BundleContext bundleContext) {
-        this.bundleContext = bundleContext;
-    }
-
-    public BundleContext getBundleContext() {
+    public static BundleContext getBundleContext() {
         return bundleContext;
     }
 
@@ -55,7 +49,7 @@ public class JRuleTransformationHandler {
      * @return The transformation result
      * @throws JRuleRuntimeException In case a transformation exception occur
      */
-    public String transform(String stateDescPattern, String state) throws JRuleRuntimeException {
+    public static String transform(String stateDescPattern, String state) throws JRuleRuntimeException {
         try {
             return TransformationHelper.transform(bundleContext, stateDescPattern, state);
         } catch (TransformationException e) {

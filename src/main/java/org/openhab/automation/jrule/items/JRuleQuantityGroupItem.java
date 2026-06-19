@@ -41,41 +41,41 @@ public interface JRuleQuantityGroupItem extends JRuleQuantityItem, JRuleGroupIte
     }
 
     default Set<JRuleQuantityItem> memberItems(boolean recursive) {
-        return JRuleEventHandler.get().getGroupMemberItems(getName(), recursive).stream()
+        return JRuleEventHandler.getGroupMemberItems(getName(), recursive).stream()
                 .map(jRuleItem -> (JRuleQuantityItem) jRuleItem).collect(Collectors.toSet());
     }
 
     default void sendCommand(JRuleQuantityValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 
     default void sendCommand(double command, String unit) {
-        JRuleEventHandler.get().sendCommand(getName(), new JRuleQuantityValue(command, unit));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.sendCommand(getName(), new JRuleQuantityValue(command, unit));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.sendUncheckedCommand(new JRuleQuantityValue(command, unit)));
     }
 
     default void sendCommand(int command, String unit) {
-        JRuleEventHandler.get().sendCommand(getName(), new JRuleQuantityValue(command, unit));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.sendCommand(getName(), new JRuleQuantityValue(command, unit));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.sendUncheckedCommand(new JRuleQuantityValue(command, unit)));
     }
 
     default void postUpdate(JRuleQuantityValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
+        JRuleEventHandler.postUpdate(getName(), state);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
     }
 
     default void postUpdate(double state, String unit) {
-        JRuleEventHandler.get().postUpdate(getName(), new JRuleQuantityValue(state, unit));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.postUpdate(getName(), new JRuleQuantityValue(state, unit));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.postUncheckedUpdate(new JRuleQuantityValue(state, unit)));
     }
 
     default void postUpdate(int state, String unit) {
-        JRuleEventHandler.get().postUpdate(getName(), new JRuleQuantityValue(state, unit));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.postUpdate(getName(), new JRuleQuantityValue(state, unit));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.postUncheckedUpdate(new JRuleQuantityValue(state, unit)));
     }
 }

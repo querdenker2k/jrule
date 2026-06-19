@@ -134,6 +134,6 @@ public interface JRuleQuantityItem extends JRuleNumberItem {
     }
 
     default JRuleQuantityValue getStateAsQuantity() {
-        return JRuleEventHandler.get().getValue(getName(), JRuleQuantityValue.class);
+        return JRuleEventHandler.getValue(getName(), JRuleQuantityValue.class);
     }
 }

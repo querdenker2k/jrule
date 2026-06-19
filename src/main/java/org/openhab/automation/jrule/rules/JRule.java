@@ -63,33 +63,32 @@ public class JRule {
     }
 
     protected void say(String text) {
-        JRuleVoiceHandler.get().say(text);
+        JRuleVoiceHandler.say(text);
     }
 
     protected void say(String text, String voiceId, String sinkId, int volumePercent) {
-        JRuleVoiceHandler.get().say(text, voiceId, sinkId, volumePercent);
+        JRuleVoiceHandler.say(text, voiceId, sinkId, volumePercent);
     }
 
     protected void say(String text, int volume) {
-        JRuleVoiceHandler.get().say(text, volume);
+        JRuleVoiceHandler.say(text, volume);
     }
 
     protected String transform(String stateDescPattern, String state) throws JRuleRuntimeException {
-        return JRuleTransformationHandler.get().transform(stateDescPattern, state);
+        return JRuleTransformationHandler.transform(stateDescPattern, state);
     }
 
     protected void executeCommandLine(String... commandLine) {
-        JRuleActionHandler.get().executeCommandLine(commandLine);
+        JRuleActionHandler.executeCommandLine(commandLine);
     }
 
     @Deprecated
     protected String executeCommandLineAndAwaitResponse(long timeout, String... commandLine) {
-        return JRuleActionHandler.get().executeCommandAndAwaitResponse(Duration.of(timeout, ChronoUnit.SECONDS),
-                commandLine);
+        return JRuleActionHandler.executeCommandAndAwaitResponse(Duration.of(timeout, ChronoUnit.SECONDS), commandLine);
     }
 
     protected String executeCommandLineAndAwaitResponse(Duration timeout, String... commandLine) {
-        return JRuleActionHandler.get().executeCommandAndAwaitResponse(timeout, commandLine);
+        return JRuleActionHandler.executeCommandAndAwaitResponse(timeout, commandLine);
     }
 
     /**
@@ -99,7 +98,7 @@ public class JRule {
      * @return Result as String
      */
     protected String sendHttpGetRequest(String url, @Nullable Duration timeout) {
-        return JRuleActionHandler.get().sendHttpGetRequest(url, null, timeout);
+        return JRuleActionHandler.sendHttpGetRequest(url, null, timeout);
     }
 
     /**
@@ -111,7 +110,7 @@ public class JRule {
      * @return Result as String
      */
     protected String sendHttpGetRequest(String url, @Nullable Map<String, String> headers, @Nullable Duration timeout) {
-        return JRuleActionHandler.get().sendHttpGetRequest(url, headers, timeout);
+        return JRuleActionHandler.sendHttpGetRequest(url, headers, timeout);
     }
 
     /**
@@ -122,7 +121,7 @@ public class JRule {
      * @return Result as String
      */
     protected String sendHttpPutRequest(String url, @Nullable Duration timeout) {
-        return JRuleActionHandler.get().sendHttpPutRequest(url, null, null, null, timeout);
+        return JRuleActionHandler.sendHttpPutRequest(url, null, null, null, timeout);
     }
 
     /**
@@ -138,7 +137,7 @@ public class JRule {
      */
     protected String sendHttpPutRequest(String url, String contentType, String content, Map<String, String> headers,
             @Nullable Duration timeout) {
-        return JRuleActionHandler.get().sendHttpPutRequest(url, contentType,
+        return JRuleActionHandler.sendHttpPutRequest(url, contentType,
                 content != null ? new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)) : null, headers,
                 timeout);
     }
@@ -156,7 +155,7 @@ public class JRule {
      */
     protected String sendHttpPutRequest(String url, String contentType, byte[] content, Map<String, String> headers,
             @Nullable Duration timeout) {
-        return JRuleActionHandler.get().sendHttpPutRequest(url, contentType,
+        return JRuleActionHandler.sendHttpPutRequest(url, contentType,
                 content != null ? new ByteArrayInputStream(content) : null, headers, timeout);
     }
 
@@ -168,7 +167,7 @@ public class JRule {
      * @return Result as String
      */
     protected String sendHttpPostRequest(String url, @Nullable Duration timeout) {
-        return JRuleActionHandler.get().sendHttpPostRequest(url, null, null, null, timeout);
+        return JRuleActionHandler.sendHttpPostRequest(url, null, null, null, timeout);
     }
 
     /**
@@ -185,7 +184,7 @@ public class JRule {
      */
     protected String sendHttpPostRequest(String url, String contentType, String content, Map<String, String> headers,
             @Nullable Duration timeout) {
-        return JRuleActionHandler.get().sendHttpPostRequest(url, contentType,
+        return JRuleActionHandler.sendHttpPostRequest(url, contentType,
                 content != null ? new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)) : null, headers,
                 timeout);
     }
@@ -204,7 +203,7 @@ public class JRule {
      */
     protected String sendHttpPostRequest(String url, String contentType, byte[] content, Map<String, String> headers,
             @Nullable Duration timeout) {
-        return JRuleActionHandler.get().sendHttpPostRequest(url, contentType,
+        return JRuleActionHandler.sendHttpPostRequest(url, contentType,
                 content != null ? new ByteArrayInputStream(content) : null, headers, timeout);
     }
 
@@ -216,7 +215,7 @@ public class JRule {
      * @return Result as String
      */
     protected String sendHttpDeleteRequest(String url, @Nullable Duration timeout) {
-        return JRuleActionHandler.get().sendHttpDeleteRequest(url, null, timeout);
+        return JRuleActionHandler.sendHttpDeleteRequest(url, null, timeout);
     }
 
     /**
@@ -228,7 +227,7 @@ public class JRule {
      * @return Result as String
      */
     protected String sendHttpDeleteRequest(String url, Map<String, String> headers, @Nullable Duration timeout) {
-        return JRuleActionHandler.get().sendHttpDeleteRequest(url, headers, timeout);
+        return JRuleActionHandler.sendHttpDeleteRequest(url, headers, timeout);
     }
 
     /**
@@ -346,51 +345,51 @@ public class JRule {
     }
 
     protected void say(String text, String voiceId, String sinkId) {
-        JRuleVoiceHandler.get().say(text, voiceId, sinkId);
+        JRuleVoiceHandler.say(text, voiceId, sinkId);
     }
 
     protected void sendCommand(String itemName, JRuleOnOffValue command) {
-        JRuleEventHandler.get().sendCommand(itemName, command);
+        JRuleEventHandler.sendCommand(itemName, command);
     }
 
     protected void sendCommand(String itemName, JRulePercentValue percentTypeCommand) {
-        JRuleEventHandler.get().sendCommand(itemName, percentTypeCommand);
+        JRuleEventHandler.sendCommand(itemName, percentTypeCommand);
     }
 
     protected void sendCommand(String itemName, String command) {
-        JRuleEventHandler.get().sendCommand(itemName, new JRuleStringValue(command));
+        JRuleEventHandler.sendCommand(itemName, new JRuleStringValue(command));
     }
 
     protected void sendCommand(String itemName, double value) {
-        JRuleEventHandler.get().sendCommand(itemName, new JRuleDecimalValue(value));
+        JRuleEventHandler.sendCommand(itemName, new JRuleDecimalValue(value));
     }
 
     protected void sendCommand(String itemName, double value, String unit) {
-        JRuleEventHandler.get().sendCommand(itemName, value, unit);
+        JRuleEventHandler.sendCommand(itemName, value, unit);
     }
 
     protected void sendCommand(String itemName, int value) {
-        JRuleEventHandler.get().sendCommand(itemName, new JRuleDecimalValue(value));
+        JRuleEventHandler.sendCommand(itemName, new JRuleDecimalValue(value));
     }
 
     protected void sendCommand(String itemName, Date date) {
-        JRuleEventHandler.get().sendCommand(itemName, new JRuleDateTimeValue(date));
+        JRuleEventHandler.sendCommand(itemName, new JRuleDateTimeValue(date));
     }
 
     protected void postUpdate(String itemName, Date date) {
-        JRuleEventHandler.get().postUpdate(itemName, new JRuleDateTimeValue(date));
+        JRuleEventHandler.postUpdate(itemName, new JRuleDateTimeValue(date));
     }
 
     protected void postUpdate(String itemName, JRuleOnOffValue state) {
-        JRuleEventHandler.get().postUpdate(itemName, state);
+        JRuleEventHandler.postUpdate(itemName, state);
     }
 
     protected void postUpdate(String itemName, String value) {
-        JRuleEventHandler.get().postUpdate(itemName, new JRuleStringValue(value));
+        JRuleEventHandler.postUpdate(itemName, new JRuleStringValue(value));
     }
 
     protected void postUpdate(String itemName, double value) {
-        JRuleEventHandler.get().postUpdate(itemName, new JRuleDecimalValue(value));
+        JRuleEventHandler.postUpdate(itemName, new JRuleDecimalValue(value));
     }
 
     protected int nowHour() {

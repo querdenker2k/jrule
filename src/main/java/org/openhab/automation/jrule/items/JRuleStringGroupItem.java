@@ -41,29 +41,29 @@ public interface JRuleStringGroupItem extends JRuleStringItem, JRuleGroupItem<JR
     }
 
     default Set<JRuleStringItem> memberItems(boolean recursive) {
-        return JRuleEventHandler.get().getGroupMemberItems(getName(), recursive).stream()
+        return JRuleEventHandler.getGroupMemberItems(getName(), recursive).stream()
                 .map(jRuleItem -> (JRuleStringItem) jRuleItem).collect(Collectors.toSet());
     }
 
     default void sendCommand(JRuleStringValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 
     default void postUpdate(JRuleStringValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
+        JRuleEventHandler.postUpdate(getName(), state);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
     }
 
     default void sendCommand(String command) {
-        JRuleEventHandler.get().sendCommand(getName(), new JRuleStringValue(command));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.sendCommand(getName(), new JRuleStringValue(command));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.sendUncheckedCommand(new JRuleStringValue(command)));
     }
 
     default void postUpdate(String state) {
-        JRuleEventHandler.get().postUpdate(getName(), new JRuleStringValue(state));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.postUpdate(getName(), new JRuleStringValue(state));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(m -> m.postUncheckedUpdate(new JRuleStringValue(state)));
     }
 }

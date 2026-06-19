@@ -74,6 +74,6 @@ public interface JRuleSwitchItem extends JRuleItem {
     }
 
     default JRuleOnOffValue getStateAsOnOff() {
-        return JRuleEventHandler.get().getValue(getName(), JRuleOnOffValue.class);
+        return JRuleEventHandler.getValue(getName(), JRuleOnOffValue.class);
     }
 }
