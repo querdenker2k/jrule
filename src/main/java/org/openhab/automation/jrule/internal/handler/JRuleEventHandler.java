@@ -86,7 +86,7 @@ public class JRuleEventHandler {
 
     private static final String LOG_NAME_EVENT = "JRuleEvent";
 
-    private static volatile JRuleEventHandler instance;
+    private static final JRuleEventHandler INSTANCE = new JRuleEventHandler();
 
     private EventPublisher eventPublisher;
 
@@ -94,18 +94,11 @@ public class JRuleEventHandler {
 
     private final Logger logger = LoggerFactory.getLogger(JRuleEventHandler.class);
 
-    private JRuleEventHandler() {
+    JRuleEventHandler() {
     }
 
     public static JRuleEventHandler get() {
-        if (instance == null) {
-            synchronized (JRuleEventHandler.class) {
-                if (instance == null) {
-                    instance = new JRuleEventHandler();
-                }
-            }
-        }
-        return instance;
+        return INSTANCE;
     }
 
     public void setEventPublisher(EventPublisher eventPublisher) {
@@ -336,7 +329,7 @@ public class JRuleEventHandler {
         return toValue(as.toFullString(), valueClass);
     }
 
-    public JRuleValue toValue(Command itemCommand) {
+    public static JRuleValue toValue(Command itemCommand) {
         Class<? extends JRuleValue> valueClass = commandMapping.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(itemCommand.getClass())).findFirst()
                 .map((Map.Entry<Class<? extends JRuleValue>, Class<? extends Command>> classClassEntry) -> Objects
@@ -346,7 +339,7 @@ public class JRuleEventHandler {
         return toValue(itemCommand.toFullString(), valueClass);
     }
 
-    public JRuleValue toValue(State itemState) {
+    public static JRuleValue toValue(State itemState) {
         if (itemState == null || itemState instanceof UnDefType) {
             return null;
         }
@@ -363,7 +356,7 @@ public class JRuleEventHandler {
         return toValue(getStateFromItem(name));
     }
 
-    public <V extends JRuleValue> V toValue(String plain, Class<? extends JRuleValue> valueClass) {
+    public static <V extends JRuleValue> V toValue(String plain, Class<? extends JRuleValue> valueClass) {
         if (JRuleOpenClosedValue.class.isAssignableFrom(valueClass)) {
             return (V) JRuleOpenClosedValue.valueOf(plain);
         } else if (JRulePlayPauseValue.class.isAssignableFrom(valueClass)) {

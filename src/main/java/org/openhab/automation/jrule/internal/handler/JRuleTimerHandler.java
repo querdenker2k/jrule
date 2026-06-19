@@ -47,17 +47,10 @@ import org.slf4j.MDC;
 public class JRuleTimerHandler {
     private static final Logger logger = LoggerFactory.getLogger(JRuleTimerHandler.class);
     public static final String LOCK_PREFIX = "$LOCK$-";
-    private static volatile JRuleTimerHandler instance = null;
+    private static final JRuleTimerHandler INSTANCE = new JRuleTimerHandler();
 
     public static JRuleTimerHandler get() {
-        if (instance == null) {
-            synchronized (JRuleThingHandler.class) {
-                if (instance == null) {
-                    instance = new JRuleTimerHandler();
-                }
-            }
-        }
-        return instance;
+        return INSTANCE;
     }
 
     private final CopyOnWriteArrayList<JRuleTimer> timers = new CopyOnWriteArrayList<>();
@@ -65,7 +58,7 @@ public class JRuleTimerHandler {
     private static final ExecutorService executorService = Executors
             .newCachedThreadPool(target -> new Thread(target, "jrule-timer"));
 
-    private JRuleTimerHandler() {
+    JRuleTimerHandler() {
     }
 
     public synchronized JRuleTimer createOrReplaceTimer(@Nullable final String timerName, Duration delay,
