@@ -71,7 +71,7 @@ public class JRuleTimerHandler {
     public synchronized boolean cancelTimer(@Nullable String timerName) {
         getTimers(timerName).forEach(JRuleTimer::cancel);
         try {
-            return getTimers(timerName).size() > 0;
+            return !getTimers(timerName).isEmpty();
         } finally {
             removeTimer(timerName);
         }

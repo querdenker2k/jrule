@@ -140,14 +140,13 @@ public class JRuleItemNameClassGeneratorTest {
             Object itemName = invocationOnMock.getArgument(0);
             return items.stream().filter(item -> item.getName().equals(itemName)).findFirst().orElseThrow();
         });
-        JRuleEventHandler.get().setItemRegistry(itemRegistry);
-    }
+        JRuleEventHandler.setItemRegistry(itemRegistry);
 
         File compiledClass = new File(targetFolder, "JRuleItemNames.class");
         assertTrue(compiledClass.exists());
 
         URLClassLoader classLoader = new URLClassLoader(new URL[] { new File("target/gen").toURI().toURL() },
-                JRuleActionClassGeneratorTest.class.getClassLoader());
+                JRuleItemNameClassGeneratorTest.class.getClassLoader());
         final String className = "org.openhab.automation.jrule.generated.items.JRuleItemNames";
         classLoader.loadClass(className);
     }
