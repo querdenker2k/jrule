@@ -12,6 +12,14 @@
   <version>5.1.0-SNAPSHOT</version>
   <name>openHAB Add-ons :: Bundles :: Standalone Java Rules Automation</name>
 
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/seaside1/jrule</url>
+    </repository>
+  </distributionManagement>
+
   <properties>
     <testcontainers.version>2.0.3</testcontainers.version>
     <bnd.importpackage>com.sun.org.apache.xml.internal.utils.*;resolution:=optional,\
