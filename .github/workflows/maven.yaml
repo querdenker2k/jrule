@@ -3,6 +3,9 @@ on: [ push,pull_request ]
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 21
@@ -11,6 +14,8 @@ jobs:
         java-version: '21'
         distribution: 'adopt'
         cache: 'maven'
+        server-id: github
+        settings-path: ${{ github.workspace }}
     - name: Build with Maven
       run: mvn --batch-mode --update-snapshots install
     - run: mkdir staging && cp target/org.openhab.automation.jrule*SNAPSHOT.jar staging
@@ -23,3 +28,8 @@ jobs:
       with:
         name: JRule-maven-artifact_build_${{ github.run_id }}
         path: staging-maven
+    - name: Deploy to GitHub Packages
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: mvn --batch-mode deploy -DskipTests --settings ${{ github.workspace }}/settings.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
