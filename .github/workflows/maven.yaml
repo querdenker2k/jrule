@@ -18,3 +18,8 @@ jobs:
       with:
         name: JRule-jar-zipped_build_${{ github.run_id }}
         path: staging
+    - run: mkdir -p staging-maven/org/openhab/addons/bundles && cp -r ~/.m2/repository/org/openhab/addons/bundles/org.openhab.automation.jrule staging-maven/org/openhab/addons/bundles/
+    - uses: actions/upload-artifact@v4
+      with:
+        name: JRule-maven-artifact_build_${{ github.run_id }}
+        path: staging-maven
