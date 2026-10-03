@@ -18,7 +18,6 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -529,37 +528,5 @@ public class JRuleHandler implements PropertyChangeListener {
 
     private void logError(String message, Object... parameters) {
         JRuleLog.error(logger, LOG_NAME_HANDLER, message, parameters);
-    }
-
-    private static class JRuleClassLoader extends URLClassLoader {
-        private final static Logger logger = LoggerFactory.getLogger(JRuleClassLoader.class);
-
-        public JRuleClassLoader(URL[] urls, @Nullable ClassLoader parent) {
-            super(urls, parent);
-        }
-
-        @Override
-        public Class<?> loadClass(String name) throws ClassNotFoundException {
-            try {
-                for (URL url : getURLs()) {
-                    if (url.getProtocol().equals("file")) {
-                        File classFile = new File(url.getFile(),
-                                name.replaceAll("\\.", "/") + JRuleConstants.CLASS_FILE_TYPE);
-                        try (InputStream is = new FileInputStream(classFile)) {
-                            byte[] buf = is.readAllBytes();
-                            return defineClass(name, buf, 0, buf.length);
-                        }
-                    }
-                }
-                return super.loadClass(name);
-            } catch (FileNotFoundException e) {
-                return super.loadClass(name);
-            } catch (IOException e) {
-                JRuleLog.warn(logger, LOG_NAME_HANDLER,
-                        "Trouble loading class {} from file system, deferring to parent clasloader: {}", name,
-                        e.toString());
-                return super.loadClass(name);
-            }
-        }
     }
 }
