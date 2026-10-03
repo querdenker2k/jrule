@@ -117,6 +117,7 @@ public class JRuleFactory {
     @Deactivate
     public synchronized void dispose() {
         delayedInit.cancel();
+        delayedInit.shutdown();
         jRuleHandler.dispose();
     }
 }
