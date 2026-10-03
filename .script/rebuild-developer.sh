@@ -57,6 +57,15 @@ for ref in "${refs[@]}"; do
     git merge --no-ff -m "Integrate ${ref}" "${ref}"
 done
 
+# Semantic conflicts between two topic branches - see integration-fixups/README.md.
+shopt -s nullglob
+fixups=(.script/integration-fixups/*.patch)
+if [[ ${#fixups[@]} -gt 0 ]]; then
+    echo "applying ${#fixups[@]} integration fixup(s)"
+    git apply --3way "${fixups[@]}"
+    git commit -q -am "Apply integration fixups"
+fi
+
 echo
 echo "developer rebuilt on $(git rev-parse --short upstream/main) (upstream/main):"
 git log --oneline --first-parent upstream/main..developer
