@@ -6,8 +6,9 @@
 # the productive jar is built from, and it is never the source of a pull request.
 #
 # Drop a line from BRANCHES once its PR is merged upstream (the script warns about those), then
-# run it again. "git config rerere.enabled true" makes recurring merge conflicts resolve
-# themselves from the previous run.
+# run it again. "git config rerere.enabled true" makes recurring merge conflicts resolve themselves
+# from the previous run - the script stages and commits such a merge itself and only stops for
+# conflicts rerere has never seen.
 #
 # Each entry is resolved as the local branch if it exists, otherwise as origin/<entry>.
 
@@ -57,7 +58,28 @@ done
 git switch --force-create developer upstream/main
 for ref in "${refs[@]}"; do
     echo "merging ${ref}"
-    git merge --no-ff -m "Integrate ${ref}" "${ref}"
+    if git merge --no-ff -m "Integrate ${ref}" "${ref}"; then
+        continue
+    fi
+
+    # Two topic branches touching the same line conflict on every single run. git rerere replays the
+    # resolution from last time into the working tree, but it does not stage it, so the merge still
+    # exits non-zero. Note that the file stays "unmerged" in the index either way, so
+    # "git diff --diff-filter=U" cannot tell the two cases apart - "git rerere remaining" can: it
+    # lists only what rerere could not resolve.
+    remaining=$(git rerere remaining)
+    if [[ -n "${remaining}" ]]; then
+        echo >&2
+        echo "${ref}: conflicts rerere could not resolve:" >&2
+        echo "${remaining}" | sed 's/^/  /' >&2
+        echo >&2
+        echo "resolve them, then: git add <files> && git commit --no-edit && $0" >&2
+        exit 1
+    fi
+
+    echo "  rerere resolved the conflict, committing"
+    git add -u
+    git commit --no-edit -q
 done
 
 # Semantic conflicts between two topic branches - see integration-fixups/README.md.
