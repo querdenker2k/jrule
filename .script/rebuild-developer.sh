@@ -23,6 +23,7 @@ BRANCHES=(
     fix/stale-thing-classes
     fix/increase-decrease-command
     cleanup/dead-code
+    fix/test-timer-isolation
     feat/item-definition-annotation
     feat/timer-invoke
 )
