@@ -17,6 +17,7 @@ BRANCHES=(
     local-only                     # own tooling and workflow tweaks, never submitted upstream
     fix/classloader-duplicate-define
     fix/factory-executor-leak
+    fix/timerhandler-pool-leak
     fix/stale-thing-classes
     fix/increase-decrease-command
     cleanup-code                   # TODO: split into PR-sized topic branches
