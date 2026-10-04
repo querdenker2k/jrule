@@ -335,7 +335,13 @@ public class JRuleHandler implements PropertyChangeListener {
         logInfo("Compiling generated sources");
         itemGenerator.generateItemsSource(itemRegistry.getItems(), metadataRegistry);
         itemNameGenerator.generateItemNamesSource(itemRegistry.getItems(), metadataRegistry);
-        thingGenerator.generateThingsSource(thingRegistry.getAll());
+        // Regenerate the per-thing classes from the same registry snapshot as JRuleThings. Otherwise a thing
+        // that changed structurally without being removed/re-added (ThingUpdatedEvent is not subscribed) keeps a
+        // stale class, e.g. "extends JRuleBridgeThing" while JRuleThings declares it as JRuleSubThing after a
+        // bridge was assigned -> "incompatible types" and the generated jar is no longer built at all.
+        Collection<Thing> things = thingRegistry.getAll();
+        things.forEach(thingGenerator::generateThingSource);
+        thingGenerator.generateThingsSource(things);
         Set<Thing> filteredThings = thingRegistry.getAll().stream().filter(thing -> {
             boolean b = thing.getHandler() != null;
             logDebug("has handler? -> {}", b);
