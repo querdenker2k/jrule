@@ -27,7 +27,7 @@ import org.openhab.automation.jrule.rules.value.JRuleValue;
 public interface JRuleGroupItem<I extends JRuleItem> extends JRuleItem {
     @Deprecated
     default Set<String> members() {
-        return JRuleEventHandler.get().getGroupMemberNames(getName(), false);
+        return JRuleEventHandler.getGroupMemberNames(getName(), false);
     }
 
     default Set<? extends JRuleItem> memberItems() {
@@ -35,27 +35,27 @@ public interface JRuleGroupItem<I extends JRuleItem> extends JRuleItem {
     }
 
     default Set<? extends JRuleItem> memberItems(boolean recursive) {
-        return JRuleEventHandler.get().getGroupMemberItems(getName(), recursive).stream().collect(Collectors.toSet());
+        return JRuleEventHandler.getGroupMemberItems(getName(), recursive).stream().collect(Collectors.toSet());
     }
 
     default void sendUncheckedCommand(JRuleValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 
     default void postUncheckedUpdate(JRuleValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
+        JRuleEventHandler.postUpdate(getName(), state);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
     }
 
     default void postUpdate(JRuleRefreshValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
+        JRuleEventHandler.postUpdate(getName(), state);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
     }
 
     default void postNullUpdate() {
-        JRuleEventHandler.get().postUpdate(getName(), null);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(JRuleItem::postNullUpdate);
+        JRuleEventHandler.postUpdate(getName(), null);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(JRuleItem::postNullUpdate);
     }
 
     @Override

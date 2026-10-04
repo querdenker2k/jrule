@@ -53,6 +53,6 @@ public interface JRuleColorItem extends JRuleDimmerItem {
     }
 
     default JRuleHsbValue getStateAsHsb() {
-        return JRuleEventHandler.get().getValue(getName(), JRuleHsbValue.class);
+        return JRuleEventHandler.getValue(getName(), JRuleHsbValue.class);
     }
 }

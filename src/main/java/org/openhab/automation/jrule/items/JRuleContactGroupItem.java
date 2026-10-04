@@ -41,12 +41,12 @@ public interface JRuleContactGroupItem extends JRuleContactItem, JRuleGroupItem<
     }
 
     default Set<JRuleContactItem> memberItems(boolean recursive) {
-        return JRuleEventHandler.get().getGroupMemberItems(getName(), recursive).stream()
+        return JRuleEventHandler.getGroupMemberItems(getName(), recursive).stream()
                 .map(jRuleItem -> (JRuleContactItem) jRuleItem).collect(Collectors.toSet());
     }
 
     default void postUpdate(JRuleOpenClosedValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
+        JRuleEventHandler.postUpdate(getName(), state);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
     }
 }

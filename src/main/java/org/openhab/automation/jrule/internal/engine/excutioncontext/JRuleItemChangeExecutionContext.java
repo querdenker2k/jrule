@@ -102,12 +102,12 @@ public class JRuleItemChangeExecutionContext extends JRuleItemExecutionContext {
         }
 
         // updating the item state to be sure that it's update when the JRule method is fired
-        // JRuleEventHandler.get().setValue(((ItemStateChangedEvent) event).getItemName(),
+        // JRuleEventHandler.setValue(((ItemStateChangedEvent) event).getItemName(),
         // ((ItemStateChangedEvent) event).getItemState());
 
         return new JRuleItemEvent(item, memberItem,
-                JRuleEventHandler.get().toValue(((ItemStateChangedEvent) event).getItemState()),
-                JRuleEventHandler.get().toValue(((ItemStateChangedEvent) event).getOldItemState()),
+                JRuleEventHandler.toValue(((ItemStateChangedEvent) event).getItemState()),
+                JRuleEventHandler.toValue(((ItemStateChangedEvent) event).getOldItemState()),
                 ((ItemStateChangedEvent) event).getLastStateUpdate(),
                 ((ItemStateChangedEvent) event).getLastStateChange(), event.getSource());
     }

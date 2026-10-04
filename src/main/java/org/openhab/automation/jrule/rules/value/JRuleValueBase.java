@@ -51,6 +51,6 @@ public abstract class JRuleValueBase implements JRuleValue {
     @Override
     public <T extends JRuleValue> T as(Class<T> target) {
         // noinspection unchecked
-        return (T) JRuleEventHandler.get().toValue(toOhState().as(JRuleEventHandler.mapJRuleToOhType(target)));
+        return (T) JRuleEventHandler.toValue(toOhState().as(JRuleEventHandler.mapJRuleToOhType(target)));
     }
 }

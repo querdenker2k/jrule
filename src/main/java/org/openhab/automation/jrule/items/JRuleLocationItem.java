@@ -53,6 +53,6 @@ public interface JRuleLocationItem extends JRuleItem {
     }
 
     default JRulePointValue getStateAsPoint() {
-        return JRuleEventHandler.get().getValue(getName(), JRulePointValue.class);
+        return JRuleEventHandler.getValue(getName(), JRulePointValue.class);
     }
 }

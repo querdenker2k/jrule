@@ -43,39 +43,39 @@ public interface JRuleRollershutterGroupItem extends JRuleRollershutterItem, JRu
     }
 
     default Set<JRuleRollershutterItem> memberItems(boolean recursive) {
-        return JRuleEventHandler.get().getGroupMemberItems(getName(), recursive).stream()
+        return JRuleEventHandler.getGroupMemberItems(getName(), recursive).stream()
                 .map(jRuleItem -> (JRuleRollershutterItem) jRuleItem).collect(Collectors.toSet());
     }
 
     default void sendCommand(JRulePercentValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 
     default void postUpdate(JRulePercentValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
+        JRuleEventHandler.postUpdate(getName(), state);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
     }
 
     default void sendCommand(int command) {
-        JRuleEventHandler.get().sendCommand(getName(), new JRulePercentValue(command));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.sendCommand(getName(), new JRulePercentValue(command));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.sendUncheckedCommand(new JRulePercentValue(command)));
     }
 
     default void sendCommand(JRuleUpDownValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 
     default void sendCommand(JRuleStopMoveValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 
     default void postUpdate(int state) {
-        JRuleEventHandler.get().postUpdate(getName(), new JRulePercentValue(state));
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false)
+        JRuleEventHandler.postUpdate(getName(), new JRulePercentValue(state));
+        JRuleEventHandler.getGroupMemberItems(getName(), false)
                 .forEach(i -> i.postUncheckedUpdate(new JRulePercentValue(state)));
     }
 }

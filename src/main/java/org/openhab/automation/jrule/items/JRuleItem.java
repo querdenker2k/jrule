@@ -69,7 +69,7 @@ public interface JRuleItem extends JRulePersistence {
      * @return (recursively) all GroupItems which this items belongs to
      */
     default Set<JRuleGroupItem<? extends JRuleItem>> getGroupItems(boolean recursive) {
-        return new HashSet<>(JRuleEventHandler.get().getGroupItems(getName(), recursive));
+        return new HashSet<>(JRuleEventHandler.getGroupItems(getName(), recursive));
     }
 
     default String getStateAsString() {
@@ -77,19 +77,19 @@ public interface JRuleItem extends JRulePersistence {
     }
 
     default JRuleValue getState() {
-        return JRuleEventHandler.get().getValue(getName());
+        return JRuleEventHandler.getValue(getName());
     }
 
     default <TD extends JRuleValue> TD getStateAs(Class<TD> type) {
-        return JRuleEventHandler.get().getValue(getName(), type);
+        return JRuleEventHandler.getValue(getName(), type);
     }
 
     default void sendUncheckedCommand(JRuleValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
+        JRuleEventHandler.sendCommand(getName(), command);
     }
 
     default void postUncheckedUpdate(JRuleValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
+        JRuleEventHandler.postUpdate(getName(), state);
     }
 
     default void postUpdate(JRuleRefreshValue state) {
@@ -97,11 +97,11 @@ public interface JRuleItem extends JRulePersistence {
     }
 
     default void postNullUpdate() {
-        JRuleEventHandler.get().postNull(getName());
+        JRuleEventHandler.postNull(getName());
     }
 
     default void postUndefUpdate() {
-        JRuleEventHandler.get().postUndef(getName());
+        JRuleEventHandler.postUndef(getName());
     }
 
     default boolean isGroup() {

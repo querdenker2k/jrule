@@ -91,6 +91,6 @@ public interface JRuleDateTimeItem extends JRuleItem {
     }
 
     default JRuleDateTimeValue getStateAsDateTime() {
-        return JRuleEventHandler.get().getValue(getName(), JRuleDateTimeValue.class);
+        return JRuleEventHandler.getValue(getName(), JRuleDateTimeValue.class);
     }
 }

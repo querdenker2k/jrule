@@ -40,6 +40,6 @@ public interface JRuleUnspecifiedGroupItem extends JRuleItem, JRuleGroupItem<JRu
     }
 
     default Set<JRuleItem> memberItems(boolean recursive) {
-        return JRuleEventHandler.get().getGroupMemberItems(getName(), recursive).stream().collect(Collectors.toSet());
+        return JRuleEventHandler.getGroupMemberItems(getName(), recursive).stream().collect(Collectors.toSet());
     }
 }

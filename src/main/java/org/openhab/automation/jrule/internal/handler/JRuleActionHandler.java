@@ -26,46 +26,34 @@ import org.openhab.core.io.net.exec.ExecUtil;
 import org.openhab.core.io.net.http.HttpUtil;
 
 /**
- * The {@link JRuleEventHandler} is responsible for handling commands and status
+ * The {@link JRuleActionHandler} is responsible for handling commands and status
  * updates for JRule
  *
  * @author Joseph (Seaside) Hagberg - Initial contribution
  */
 public class JRuleActionHandler {
 
-    private static volatile JRuleActionHandler instance = null;
-
     private JRuleActionHandler() {
     }
 
-    public static JRuleActionHandler get() {
-        if (instance == null) {
-            synchronized (JRuleActionHandler.class) {
-                if (instance == null) {
-                    instance = new JRuleActionHandler();
-                }
-            }
-        }
-        return instance;
-    }
-
-    public void executeCommandLine(String... commandLine) {
+    public static void executeCommandLine(String... commandLine) {
         ExecUtil.executeCommandLine(commandLine);
     }
 
-    public String executeCommandAndAwaitResponse(Duration timeout, String... commandLine) {
+    public static String executeCommandAndAwaitResponse(Duration timeout, String... commandLine) {
         return ExecUtil.executeCommandLineAndWaitResponse(timeout, commandLine);
     }
 
     /**
      * Sends a GET-HTTP request with the given request headers, and timeout in ms, and returns the result as a String
-     * 
+     *
      * @param url Target URL
      * @param headers Header parameters for the request
      * @param timeout Time after the request will be canceled
      * @return Result as String
      */
-    public String sendHttpGetRequest(String url, @Nullable Map<String, String> headers, @Nullable Duration timeout) {
+    public static String sendHttpGetRequest(String url, @Nullable Map<String, String> headers,
+            @Nullable Duration timeout) {
         try {
             return HttpUtil.executeUrl(HttpMethod.GET, url, mapToProperties(headers), null, null,
                     getTimeoutAsInt(timeout));
@@ -77,7 +65,7 @@ public class JRuleActionHandler {
     /**
      * Sends a PUT-HTTP request with the given content, request headers, and timeout in ms, and returns the result as a
      * String
-     * 
+     *
      * @param url Target URL
      * @param contentType @see javax.ws.rs.core.MediaType
      * @param content Request content
@@ -85,7 +73,7 @@ public class JRuleActionHandler {
      * @param timeout Time after the request will be canceled
      * @return Result as String
      */
-    public String sendHttpPutRequest(String url, String contentType, @Nullable InputStream content,
+    public static String sendHttpPutRequest(String url, String contentType, @Nullable InputStream content,
             Map<String, String> headers, @Nullable Duration timeout) {
         try {
             return HttpUtil.executeUrl(HttpMethod.PUT, url, mapToProperties(headers), content, contentType,
@@ -99,7 +87,7 @@ public class JRuleActionHandler {
      * Sends a POST-HTTP request with the given content, request headers, and timeout in ms, and returns the result as a
      * String
      * <br/>
-     * 
+     *
      * @param url Target URL
      * @param contentType @see javax.ws.rs.core.MediaType
      * @param content Request content
@@ -107,7 +95,7 @@ public class JRuleActionHandler {
      * @param timeout Time after the request will be canceled
      * @return Result as String
      */
-    public String sendHttpPostRequest(String url, String contentType, @Nullable InputStream content,
+    public static String sendHttpPostRequest(String url, String contentType, @Nullable InputStream content,
             Map<String, String> headers, @Nullable Duration timeout) {
         try {
             return HttpUtil.executeUrl(HttpMethod.POST, url, mapToProperties(headers), content, contentType,
@@ -119,13 +107,13 @@ public class JRuleActionHandler {
 
     /**
      * Sends a DELETE-HTTP request with the given request headers, and timeout in ms, and returns the result as a String
-     * 
+     *
      * @param url Target URL
      * @param headers Header parameters for the request
      * @param timeout Time after the request will be canceled
      * @return Result as String
      */
-    public String sendHttpDeleteRequest(String url, Map<String, String> headers, @Nullable Duration timeout) {
+    public static String sendHttpDeleteRequest(String url, Map<String, String> headers, @Nullable Duration timeout) {
         try {
             return HttpUtil.executeUrl(HttpMethod.DELETE, url, mapToProperties(headers), null, null,
                     getTimeoutAsInt(timeout));
@@ -143,7 +131,7 @@ public class JRuleActionHandler {
         return properties;
     }
 
-    private int getTimeoutAsInt(Duration timeout) {
+    private static int getTimeoutAsInt(Duration timeout) {
         if (timeout == null) {
             return 0;
         }

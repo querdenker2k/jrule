@@ -128,7 +128,7 @@ public class JRuleItemRegistry {
 
     private static Item verifyThatItemExist(String itemName) throws JRuleItemNotFoundException {
         try {
-            ItemRegistry itemRegistry = JRuleEventHandler.get().getItemRegistry();
+            ItemRegistry itemRegistry = JRuleEventHandler.getItemRegistry();
             if (itemRegistry == null) {
                 throw new IllegalStateException(
                         String.format("Item registry is not set can't get item for name: %s", itemName));

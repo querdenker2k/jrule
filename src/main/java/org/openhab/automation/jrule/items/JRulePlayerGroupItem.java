@@ -43,27 +43,27 @@ public interface JRulePlayerGroupItem extends JRulePlayerItem, JRuleGroupItem<JR
     }
 
     default Set<JRulePlayerItem> memberItems(boolean recursive) {
-        return JRuleEventHandler.get().getGroupMemberItems(getName(), recursive).stream()
+        return JRuleEventHandler.getGroupMemberItems(getName(), recursive).stream()
                 .map(jRuleItem -> (JRulePlayerItem) jRuleItem).collect(Collectors.toSet());
     }
 
     default void sendCommand(JRulePlayPauseValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 
     default void postUpdate(JRulePlayPauseValue state) {
-        JRuleEventHandler.get().postUpdate(getName(), state);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
+        JRuleEventHandler.postUpdate(getName(), state);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.postUncheckedUpdate(state));
     }
 
     default void sendCommand(JRuleRewindFastforwardValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 
     default void sendCommand(JRuleNextPreviousValue command) {
-        JRuleEventHandler.get().sendCommand(getName(), command);
-        JRuleEventHandler.get().getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
+        JRuleEventHandler.sendCommand(getName(), command);
+        JRuleEventHandler.getGroupMemberItems(getName(), false).forEach(i -> i.sendUncheckedCommand(command));
     }
 }

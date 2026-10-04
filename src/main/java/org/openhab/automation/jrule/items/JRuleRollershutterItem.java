@@ -103,6 +103,6 @@ public interface JRuleRollershutterItem extends JRuleItem {
     }
 
     default JRulePercentValue getStateAsPercent() {
-        return JRuleEventHandler.get().getValue(getName(), JRulePercentValue.class);
+        return JRuleEventHandler.getValue(getName(), JRulePercentValue.class);
     }
 }

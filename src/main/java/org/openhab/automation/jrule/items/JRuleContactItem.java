@@ -47,6 +47,6 @@ public interface JRuleContactItem extends JRuleItem {
     }
 
     default JRuleOpenClosedValue getStateAsOpenClose() {
-        return JRuleEventHandler.get().getValue(getName(), JRuleOpenClosedValue.class);
+        return JRuleEventHandler.getValue(getName(), JRuleOpenClosedValue.class);
     }
 }

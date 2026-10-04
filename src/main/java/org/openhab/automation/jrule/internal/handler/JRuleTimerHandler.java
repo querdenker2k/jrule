@@ -48,17 +48,10 @@ public class JRuleTimerHandler {
     private static final Logger logger = LoggerFactory.getLogger(JRuleTimerHandler.class);
     public static final String LOCK_PREFIX = "$LOCK$-";
     private static final int CANCEL_ALL_MAX_PASSES = 10;
-    private static volatile JRuleTimerHandler instance = null;
+    private static final JRuleTimerHandler INSTANCE = new JRuleTimerHandler();
 
     public static JRuleTimerHandler get() {
-        if (instance == null) {
-            synchronized (JRuleTimerHandler.class) {
-                if (instance == null) {
-                    instance = new JRuleTimerHandler();
-                }
-            }
-        }
-        return instance;
+        return INSTANCE;
     }
 
     private final CopyOnWriteArrayList<JRuleTimer> timers = new CopyOnWriteArrayList<>();
@@ -69,7 +62,7 @@ public class JRuleTimerHandler {
         return thread;
     });
 
-    private JRuleTimerHandler() {
+    JRuleTimerHandler() {
     }
 
     public synchronized JRuleTimer createOrReplaceTimer(@Nullable final String timerName, Duration delay,
@@ -82,7 +75,7 @@ public class JRuleTimerHandler {
     public synchronized boolean cancelTimer(@Nullable String timerName) {
         getTimers(timerName).forEach(JRuleTimer::cancel);
         try {
-            return getTimers(timerName).size() > 0;
+            return !getTimers(timerName).isEmpty();
         } finally {
             removeTimer(timerName);
         }
@@ -163,7 +156,7 @@ public class JRuleTimerHandler {
         return JRule.JRULE_EXECUTION_CONTEXT.get();
     }
 
-    private synchronized List<JRuleTimer> getTimers(String timerName) {
+    public synchronized List<JRuleTimer> getTimers(String timerName) {
         List<JRuleTimer> list = timers.stream().filter(timer -> timer.name.equals(timerName))
                 .collect(Collectors.toList());
         logger.trace("timers for name '{}': {}", timerName, list.size());
@@ -295,6 +288,11 @@ public class JRuleTimerHandler {
 
         public JRuleTimerHandler.JRuleTimer rescheduleTimer(Duration delay) {
             return JRuleTimerHandler.this.createOrReplaceTimer(this.name, delay, this.function, context);
+        }
+
+        public JRuleTimerHandler.JRuleTimer invoke() {
+            JRuleTimerHandler.this.invokeTimerInternal(this, this.function);
+            return this;
         }
 
         public boolean isDone() {
