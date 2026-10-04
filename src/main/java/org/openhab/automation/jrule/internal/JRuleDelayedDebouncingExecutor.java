@@ -77,10 +77,15 @@ public class JRuleDelayedDebouncingExecutor {
         logger.debug("Shutting down delayed debouncing executor");
         executorService.shutdownNow();
         try {
-            executorService.awaitTermination(TERMINATION_AWAIT_TIME_SECONDS, TimeUnit.SECONDS);
-            logger.debug("Delayed debouncing executor shutdown complete");
+            if (executorService.awaitTermination(TERMINATION_AWAIT_TIME_SECONDS, TimeUnit.SECONDS)) {
+                logger.debug("Delayed debouncing executor shutdown complete");
+            } else {
+                logger.warn("Delayed debouncing executor did not terminate within {} seconds",
+                        TERMINATION_AWAIT_TIME_SECONDS);
+            }
         } catch (InterruptedException e) {
             logger.warn("Got interrupted while shutting down delayed debouncing executor", e);
+            Thread.currentThread().interrupt();
         }
     }
 }
