@@ -47,11 +47,12 @@ import org.slf4j.MDC;
 public class JRuleTimerHandler {
     private static final Logger logger = LoggerFactory.getLogger(JRuleTimerHandler.class);
     public static final String LOCK_PREFIX = "$LOCK$-";
+    private static final int CANCEL_ALL_MAX_PASSES = 10;
     private static volatile JRuleTimerHandler instance = null;
 
     public static JRuleTimerHandler get() {
         if (instance == null) {
-            synchronized (JRuleThingHandler.class) {
+            synchronized (JRuleTimerHandler.class) {
                 if (instance == null) {
                     instance = new JRuleTimerHandler();
                 }
@@ -62,8 +63,11 @@ public class JRuleTimerHandler {
 
     private final CopyOnWriteArrayList<JRuleTimer> timers = new CopyOnWriteArrayList<>();
 
-    private static final ExecutorService executorService = Executors
-            .newCachedThreadPool(target -> new Thread(target, "jrule-timer"));
+    private final ExecutorService executorService = Executors.newCachedThreadPool(target -> {
+        Thread thread = new Thread(target, "jrule-timer");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     private JRuleTimerHandler() {
     }
@@ -201,8 +205,20 @@ public class JRuleTimerHandler {
         return CompletableFuture.supplyAsync(() -> null, delayedExecutor);
     }
 
+    /**
+     * Cancels every timer. A timer body that is running while this is called may still register a
+     * follow-up timer through createTimerAfter or rescheduleTimer, so the list is drained in passes
+     * instead of over a single snapshot. The pass count is bounded so that a timer rescheduling
+     * itself in a loop cannot keep this from returning.
+     */
     public void cancelAll() {
-        this.timers.forEach(jRuleTimer -> cancelTimer(jRuleTimer.name));
+        for (int pass = 0; pass < CANCEL_ALL_MAX_PASSES && !timers.isEmpty(); pass++) {
+            timers.forEach(jRuleTimer -> cancelTimer(jRuleTimer.name));
+        }
+        if (!timers.isEmpty()) {
+            logger.warn("Gave up cancelling all timers after {} passes, still pending: {}", CANCEL_ALL_MAX_PASSES,
+                    timers.stream().map(timer -> timer.name).collect(Collectors.toList()));
+        }
     }
 
     public final class JRuleTimer {
