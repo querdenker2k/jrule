@@ -18,10 +18,13 @@ BRANCHES=(
     local-only                     # own tooling and workflow tweaks, never submitted upstream
     fix/classloader-duplicate-define
     fix/factory-executor-leak
+    cleanup/eager-singletons       # conflicts with the next one in JRuleTimerHandler.get()
     fix/timerhandler-pool-leak
     fix/stale-thing-classes
     fix/increase-decrease-command
-    cleanup-code                   # TODO: split into PR-sized topic branches
+    cleanup/dead-code
+    feat/item-definition-annotation
+    feat/timer-invoke
 )
 
 cd "$(dirname "$0")/.."
