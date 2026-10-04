@@ -40,8 +40,8 @@ class JRuleIncreaseDecreaseValueTest {
     @Test
     void fromOhCommand() {
         Assertions.assertEquals(JRuleIncreaseDecreaseValue.INCREASE,
-                JRuleEventHandler.get().toValue(IncreaseDecreaseType.INCREASE));
+                JRuleEventHandler.toValue(IncreaseDecreaseType.INCREASE));
         Assertions.assertEquals(JRuleIncreaseDecreaseValue.DECREASE,
-                JRuleEventHandler.get().toValue(IncreaseDecreaseType.DECREASE));
+                JRuleEventHandler.toValue(IncreaseDecreaseType.DECREASE));
     }
 }
