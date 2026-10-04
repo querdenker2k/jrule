@@ -303,11 +303,6 @@ public class JRuleEventHandler {
         JRuleLog.info(logger, getLogName(LOG_NAME_EVENT), message, parameters);
     }
 
-    @SuppressWarnings("unused")
-    private void logWarn(String message, Object... parameters) {
-        JRuleLog.warn(logger, getLogName(LOG_NAME_EVENT), message, parameters);
-    }
-
     private void logError(String message, Object... parameters) {
         JRuleLog.error(logger, getLogName(LOG_NAME_EVENT), message, parameters);
     }

@@ -16,8 +16,6 @@ import org.openhab.core.audio.AudioHTTPServer;
 import org.openhab.core.library.types.PercentType;
 import org.openhab.core.net.NetworkAddressService;
 import org.openhab.core.voice.VoiceManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The {@link JRuleVoiceHandler} is responsible for handling commands and status
@@ -36,8 +34,6 @@ public class JRuleVoiceHandler {
     public VoiceManager getVoiceManager() {
         return voiceManager;
     }
-
-    private final Logger logger = LoggerFactory.getLogger(JRuleVoiceHandler.class);
 
     private JRuleVoiceHandler() {
     }

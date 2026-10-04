@@ -16,8 +16,6 @@ import org.openhab.automation.jrule.exception.JRuleRuntimeException;
 import org.openhab.core.transform.TransformationException;
 import org.openhab.core.transform.TransformationHelper;
 import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The {@link JRuleTransformationHandler} is responsible for handling transformation requests
@@ -29,8 +27,6 @@ public class JRuleTransformationHandler {
     private static volatile JRuleTransformationHandler instance;
 
     private BundleContext bundleContext;
-
-    private final Logger logger = LoggerFactory.getLogger(JRuleTransformationHandler.class);
 
     private JRuleTransformationHandler() {
     }

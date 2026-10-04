@@ -74,7 +74,6 @@ public class JRuleEventSubscriber implements EventSubscriber {
     private final Queue<Event> eventQueue = new ConcurrentLinkedQueue<>();
 
     private volatile boolean queueEvents = false;
-    private JRuleEngine jRuleEngine = JRuleEngine.get();
 
     public JRuleEventSubscriber() {
         propertyChangeSupport = new PropertyChangeSupport(this);
@@ -111,7 +110,6 @@ public class JRuleEventSubscriber implements EventSubscriber {
 
     public void stopSubscriber() {
         propertyChangeSupport.removePropertyChangeListener(JRuleEngine.get());
-        propertyChangeSupport.removePropertyChangeListener(jRuleEngine);
     }
 
     /**
@@ -166,7 +164,7 @@ public class JRuleEventSubscriber implements EventSubscriber {
                 || event.getType().equals(ItemStateChangedEvent.TYPE)
                 || event.getType().equals(GroupItemStateChangedEvent.TYPE)) {
             final String itemFromTopic = JRuleUtil.getItemNameFromTopic(event.getTopic());
-            if (jRuleEngine.watchingForItem(itemFromTopic)) {
+            if (JRuleEngine.get().watchingForItem(itemFromTopic)) {
                 JRuleLog.debug(logger, LOG_NAME_SUBSCRIBER, "Event processed as {}: topic {} payload: {}",
                         PROPERTY_ITEM_EVENT, event.getTopic(), event.getPayload());
                 propertyChangeSupport.firePropertyChange(PROPERTY_ITEM_EVENT, null, event);
@@ -174,7 +172,7 @@ public class JRuleEventSubscriber implements EventSubscriber {
         } else if (event.getType().equals(ChannelTriggeredEvent.TYPE)) {
             ChannelTriggeredEvent channelTriggeredEvent = (ChannelTriggeredEvent) event;
             String channel = channelTriggeredEvent.getChannel().toString();
-            if (jRuleEngine.watchingForChannel(channel)) {
+            if (JRuleEngine.get().watchingForChannel(channel)) {
                 JRuleLog.debug(logger, LOG_NAME_SUBSCRIBER, "Event processed as {}: topic {} payload: {}",
                         PROPERTY_CHANNEL_EVENT, event.getTopic(), event.getPayload());
                 propertyChangeSupport.firePropertyChange(PROPERTY_CHANNEL_EVENT, null, event);
@@ -183,7 +181,7 @@ public class JRuleEventSubscriber implements EventSubscriber {
             ThingStatusInfoChangedEvent thingStatusChangedEvent = (ThingStatusInfoChangedEvent) event;
             String thingUID = thingStatusChangedEvent.getThingUID().toString();
 
-            if (jRuleEngine.watchingForThing(thingUID)) {
+            if (JRuleEngine.get().watchingForThing(thingUID)) {
                 JRuleLog.debug(logger, LOG_NAME_SUBSCRIBER, "Event processed as {}: topic {} payload: {}",
                         PROPERTY_THING_STATUS_EVENT, event.getTopic(), event.getPayload());
                 propertyChangeSupport.firePropertyChange(PROPERTY_THING_STATUS_EVENT, null, event);

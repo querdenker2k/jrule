@@ -78,7 +78,7 @@ public class JRuleTimerHandler {
     public synchronized boolean cancelTimer(@Nullable String timerName) {
         getTimers(timerName).forEach(JRuleTimer::cancel);
         try {
-            return getTimers(timerName).size() > 0;
+            return !getTimers(timerName).isEmpty();
         } finally {
             removeTimer(timerName);
         }
@@ -141,7 +141,7 @@ public class JRuleTimerHandler {
     }
 
     public boolean isTimeLocked(String lockName) {
-        return getTimers(LOCK_PREFIX + lockName).size() > 0;
+        return !getTimers(LOCK_PREFIX + lockName).isEmpty();
     }
 
     public boolean getTimeLock(String lockName, Duration duration) {

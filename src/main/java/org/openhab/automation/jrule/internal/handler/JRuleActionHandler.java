@@ -26,7 +26,7 @@ import org.openhab.core.io.net.exec.ExecUtil;
 import org.openhab.core.io.net.http.HttpUtil;
 
 /**
- * The {@link JRuleEventHandler} is responsible for handling commands and status
+ * The {@link JRuleActionHandler} is responsible for handling commands and status
  * updates for JRule
  *
  * @author Joseph (Seaside) Hagberg - Initial contribution
